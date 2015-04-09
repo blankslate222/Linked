@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='/linked/resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
 <title>Company Profile</title>
 </head>
 <body>
@@ -18,7 +18,7 @@
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="/linked/resources/images/logo.png">
+							src="/Linked/resources/images/logo.png">
 					</h2>
 					
 					<div style="left:135px;top:4px;position:absolute;height:0px" id="control_gen_2" class="search-scope global-nav-styled-dropdown">
@@ -62,7 +62,7 @@ Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/linked/company">
+<a href="/Linked/company">
 Companies
 </a>
 </li>
@@ -78,7 +78,7 @@ Companies
 
 
 
-<h1 style="position:absolute;right:50px;top:80px"><a href="/linked/company/manage">Manage Companies</a></h1>
+<h1 style="position:absolute;right:50px;top:80px"><a href="/Linked/company/manage">Manage Companies</a></h1>
 <div id="linked-main-div">
 
 <div style="position:absolute;top:150px;left:400px">

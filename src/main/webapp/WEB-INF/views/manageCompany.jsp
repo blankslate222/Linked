@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='/linked/resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
 <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <title>Manage Companies</title>
 <script type="text/javascript">
@@ -21,7 +21,7 @@
 	function updateReview(obj) {
 		var url = document.getElementById("url-"+obj).value;
 		var overview = document.getElementById("overview-"+obj).value;
-		new Ajax.Request('/linked/company/'+obj, {
+		new Ajax.Request('/Linked/company/'+obj, {
 	  		method:'put',
 	  		parameters:{url:url, overview:overview},
 	  		onSuccess: function(transport) {
@@ -46,7 +46,7 @@
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="/linked/resources/images/logo.png">
+							src="/Linked/resources/images/logo.png">
 					</h2>
 					
 					<div style="left:135px;top:4px;position:absolute;height:0px" id="control_gen_2" class="search-scope global-nav-styled-dropdown">
@@ -90,7 +90,7 @@ Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/linked/company">
+<a href="/Linked/company">
 Companies
 </a>
 </li>
@@ -115,7 +115,7 @@ Companies
 				<br/>
 				<div style="width:100%; height:1px; background:rgb(190,190,190)"></div>
 				<div style="float:right"> 
-   					<img alt="" style="border-radius: 4px;" src="/linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
+   					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
    				</div>
 				<div>
 				
