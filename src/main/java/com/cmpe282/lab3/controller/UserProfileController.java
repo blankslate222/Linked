@@ -23,12 +23,12 @@ public class UserProfileController {
 
 	private UserProfileService userProfileService;
 
-	public UserProfileService getDynamoService() {
+	public UserProfileService getUserProfileService() {
 		return userProfileService;
 	}
 
 	@Autowired
-	public void setDynamoService(UserProfileService userProfileService) {
+	public void setUserProfileService(UserProfileService userProfileService) {
 		this.userProfileService = userProfileService;
 	}
 
@@ -49,7 +49,7 @@ public class UserProfileController {
 		String email = "" + req.getSession().getAttribute("user");
 		upf.setEmail(email);
 		// System.out.println(upf.getExperience().size() > 0);
-		userProfileService.saveUserProfile(upf);
+		getUserProfileService().saveUserProfile(upf);
 		return "redirect:/user-profile/" + email;
 	}
 
@@ -58,30 +58,40 @@ public class UserProfileController {
 			Model model) {
 		ModelAndView modelAndView = new ModelAndView("displayUserProfile");
 		// System.out.println("path var email =" + email);
-		UserProfile user = userProfileService.getUserProfile(email);
+		UserProfile user = getUserProfileService().getUserProfile(email);
 		// System.out.println(user.getSkills());
 		modelAndView.addObject("userProfile", user);
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/user-profile/update", method = RequestMethod.GET)
-	public String updateProfile(Model model, HttpServletRequest req) {
+	public String updateProfileForm(Model model, HttpServletRequest req) {
 		String email = (String) req.getSession().getAttribute("user");
-		UserProfile user = userProfileService.getUserProfile(email);
+		UserProfile user = getUserProfileService().getUserProfile(email);
 		model.addAttribute("userProfile", user);
 		return "userProfile";
 	}
 
+	@RequestMapping(value = "/user-profile/update", method = RequestMethod.POST)
+	public String updateProfile(
+			@ModelAttribute("userProfile") UserProfile userProfile,
+			BindingResult result, HttpServletRequest req) {
+		String email = (String) req.getSession().getAttribute("user");
+		getUserProfileService().updateUserProfile(email, userProfile);
+		return "redirect:/user-profile/" + email;
+	}
+
 	@RequestMapping(value = "/follow/user", method = RequestMethod.POST)
-	public void addFollowing(@ModelAttribute("userProfile") UserProfile followedUser,
+	public void addFollowing(
+			@ModelAttribute("userProfile") UserProfile followedUser,
 			BindingResult result, Model model, HttpServletRequest req) {
-		
+
 		String followedUserEmail = followedUser.getEmail();
-		String userInSession = (String)req.getSession().getAttribute("user");
+		String userInSession = (String) req.getSession().getAttribute("user");
 		UserProfile user = userProfileService.getUserProfile(userInSession);
 		user.getUsersFollowed().add(followedUserEmail);
 		userProfileService.saveUserProfile(user);
-		
+
 	}
 
 }

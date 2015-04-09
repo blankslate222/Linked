@@ -1,15 +1,21 @@
 package com.cmpe282.lab3.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.cmpe282.lab3.model.CompanyProfile;
+import com.cmpe282.lab3.model.JobPosting;
+import com.cmpe282.lab3.model.UserProfile;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class DynamoService {
 	
@@ -25,11 +31,11 @@ public class DynamoService {
 	}
 
 	public void createCompanyProfile(CompanyProfile companyProfile) {
-		dynamoConnection.getDynamoDBMapper().save(companyProfile);
+		getDynamoConnection().getDynamoDBMapper().save(companyProfile);
 	}
 	
 	public CompanyProfile getCompanyProfile(String name) {
-		CompanyProfile c = dynamoConnection.getDynamoDBMapper().load(CompanyProfile.class, name);
+		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
 		return c;
 	}
 	
@@ -46,7 +52,7 @@ public class DynamoService {
 	            req.setExclusiveStartKey(result.getLastEvaluatedKey());
 	        }
 	        
-	        result = dynamoConnection.getDynamoDB().scan(req);
+	        result = getDynamoConnection().getDynamoDB().scan(req);
 	 
 	        List<Map<String, AttributeValue>> rows = result.getItems();
 	 
@@ -62,11 +68,134 @@ public class DynamoService {
 	    } while(result.getLastEvaluatedKey() != null);
 	    List<CompanyProfile> lists = new ArrayList<CompanyProfile>();
 	    for(int i=0;i<ids.size();i++) {
-	    	CompanyProfile companyProfile = dynamoConnection.getDynamoDBMapper().load(CompanyProfile.class, ids.get(i));
+	    	CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, ids.get(i));
 	    	
 	    	lists.add(companyProfile);
 	    }
 	    return lists;
 	}
 
+	public List<JobPosting> getJobs(String id) {
+		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
+		Condition scanFilterCondition = new Condition()
+		.withComparisonOperator(ComparisonOperator.CONTAINS)
+		.withAttributeValueList(new AttributeValue().withS(id));
+		Map<String, Condition> conditions = new HashMap<String, Condition>();
+		conditions.put("id", scanFilterCondition);
+		System.out.println("1");
+		Key lastKeyEvaluated = null;
+		List<String> ids = new ArrayList<String>();
+		do {
+			System.out.println("2");
+			ScanRequest scanRequest = new ScanRequest()
+			.withTableName("JobPosting")
+			.withScanFilter(conditions);
+			System.out.println("3");
+			ScanResult result = getDynamoConnection().getDynamoDB().scan(scanRequest);
+			System.out.println("4");
+			for (Map<String, AttributeValue> item : result.getItems()) {
+				items.add(item);
+				if(item.containsKey("id")){
+					AttributeValue v = item.get("id");
+					String id1 = v.getS();
+					ids.add(id1);
+				}
+				
+			}
+
+			lastKeyEvaluated = (Key) result.getLastEvaluatedKey();
+
+		}while(lastKeyEvaluated != null);
+		System.out.println("5");
+		List<JobPosting> lists = new ArrayList<JobPosting>();
+		for(int i=0;i<ids.size();i++) {
+			JobPosting companyProfile = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, ids.get(i));
+			lists.add(companyProfile);
+		}
+		System.out.println("5");
+		return lists;
+	}
+
+	
+	public List<UserProfile> getPeople(String name) {
+		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
+		Condition scanFilterCondition = new Condition()
+		.withComparisonOperator(ComparisonOperator.CONTAINS)
+		.withAttributeValueList(new AttributeValue().withS(name));
+		Map<String, Condition> conditions = new HashMap<String, Condition>();
+		conditions.put("email", scanFilterCondition);
+		System.out.println("1");
+		Key lastKeyEvaluated = null;
+		List<String> ids = new ArrayList<String>();
+		do {
+			System.out.println("2");
+			ScanRequest scanRequest = new ScanRequest()
+			.withTableName("UserProfile")
+			.withScanFilter(conditions);
+			System.out.println("3");
+			ScanResult result = getDynamoConnection().getDynamoDB().scan(scanRequest);
+			System.out.println("4");
+			for (Map<String, AttributeValue> item : result.getItems()) {
+				items.add(item);
+				if(item.containsKey("email")){
+					AttributeValue v = item.get("email");
+					String id1 = v.getS();
+					ids.add(id1);
+				}
+				
+			}
+
+			lastKeyEvaluated = (Key) result.getLastEvaluatedKey();
+
+		}while(lastKeyEvaluated != null);
+		System.out.println("5");
+		List<UserProfile> lists = new ArrayList<UserProfile>();
+		for(int i=0;i<ids.size();i++) {
+			UserProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(UserProfile.class, ids.get(i));
+			lists.add(companyProfile);
+		}
+		System.out.println("5");
+		return lists;
+	}
+	
+	public List<CompanyProfile> getCompanies(String name) {
+		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
+		Condition scanFilterCondition = new Condition()
+		.withComparisonOperator(ComparisonOperator.CONTAINS)
+		.withAttributeValueList(new AttributeValue().withS(name));
+		Map<String, Condition> conditions = new HashMap<String, Condition>();
+		conditions.put("company_id", scanFilterCondition);
+		System.out.println("1");
+		Key lastKeyEvaluated = null;
+		List<String> ids = new ArrayList<String>();
+		do {
+			System.out.println("2");
+			ScanRequest scanRequest = new ScanRequest()
+			.withTableName("Company")
+			.withScanFilter(conditions);
+			System.out.println("3");
+			ScanResult result = getDynamoConnection().getDynamoDB().scan(scanRequest);
+			System.out.println("4");
+			for (Map<String, AttributeValue> item : result.getItems()) {
+				items.add(item);
+				if(item.containsKey("company_id")){
+					AttributeValue v = item.get("company_id");
+					String id1 = v.getS();
+					ids.add(id1);
+				}
+				
+			}
+
+			lastKeyEvaluated = (Key) result.getLastEvaluatedKey();
+
+		}while(lastKeyEvaluated != null);
+		System.out.println("5");
+		List<CompanyProfile> lists = new ArrayList<CompanyProfile>();
+		for(int i=0;i<ids.size();i++) {
+			CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, ids.get(i));
+			lists.add(companyProfile);
+		}
+		System.out.println("5");
+		return lists;
+	}
 }

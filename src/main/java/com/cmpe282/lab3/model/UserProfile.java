@@ -1,5 +1,6 @@
 package com.cmpe282.lab3.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName="UserProfile")
-public class UserProfile {
+public class UserProfile implements Serializable{
+
+	private static final long serialVersionUID = 3666183246195100859L;
 
 	private String email;
 	private String summary;

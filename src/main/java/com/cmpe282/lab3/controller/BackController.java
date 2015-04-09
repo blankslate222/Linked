@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cmpe282.lab3.model.User;
+import com.cmpe282.lab3.service.DynamoService;
 import com.cmpe282.lab3.service.Service;
 
 @Controller
@@ -31,15 +32,18 @@ private Service service;
 	public void setService(Service service) {
 		this.service = service;
 	}
-	
+
 	@RequestMapping(value = "/home/{email}", method = RequestMethod.GET)
 	public String userHome(@PathVariable("email") String email, Model model) {
 		//noSql data to be fetched
+		
 		User user = null;
 		String view = "home";
 		try {
 			user = getService().getUser(email);
 			model.addAttribute("user", user);
+			
+			//dynamoService.getCompanyProfile("");
 			view="profile";
 			//System.out.println(user.getFirstName()+ " " + user.getLastName());
 		} catch (SQLException e) {

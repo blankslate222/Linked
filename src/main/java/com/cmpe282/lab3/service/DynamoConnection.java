@@ -39,6 +39,7 @@ public class DynamoConnection {
 			dynamoDB = new AmazonDynamoDBClient(awsCredentials);
 			dynamoDB.setRegion(Region.getRegion(Regions.US_WEST_2));
 			dynamoDBMapper = new DynamoDBMapper(dynamoDB);
+			System.out.println("done creating connection");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -4,10 +4,17 @@ package com.cmpe282.lab3.service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.cmpe282.lab3.model.UserProfile;
+import com.google.code.ssm.CacheFactory;
+import com.google.code.ssm.api.InvalidateSingleCache;
+import com.google.code.ssm.api.ParameterValueKeyProvider;
+import com.google.code.ssm.api.ReadThroughSingleCache;
+import com.google.code.ssm.api.ReturnDataUpdateContent;
+import com.google.code.ssm.api.UpdateSingleCache;
 
 public class UserProfileService {
 	private DynamoConnection dynamoConnection;
-
+	@Autowired
+	private CacheFactory memcachedClient;
 	public DynamoConnection getDynamoConnection() {
 		return dynamoConnection;
 	}
@@ -17,13 +24,21 @@ public class UserProfileService {
 		this.dynamoConnection = dynamoConnection;
 	}
 	
+	@InvalidateSingleCache
 	public void saveUserProfile(UserProfile userProfile) {
 		dynamoConnection.getDynamoDBMapper().save(userProfile);
 	}
 	
-	public UserProfile getUserProfile(String email) {
+	@UpdateSingleCache(expiration = 180)
+	public void updateUserProfile(@ParameterValueKeyProvider String email, UserProfile userProfile) {
+		dynamoConnection.getDynamoDBMapper().save(userProfile);
+	}
+	
+	@ReadThroughSingleCache(expiration = 3600)
+	public UserProfile getUserProfile(@ParameterValueKeyProvider String email) {
 		UserProfile c = dynamoConnection.getDynamoDBMapper().load(UserProfile.class, email);
 		//if(c==null) System.out.println("user profile  null");
+		
 		return c;
 	}
 	
