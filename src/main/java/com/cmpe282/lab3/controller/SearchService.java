@@ -51,13 +51,13 @@ private DynamoService dynamoService;
 	
 	@RequestMapping(value = "/people/{name}", method = RequestMethod.GET)
 	public void searchPeople(@PathVariable("name") String name,Model model) {
-		System.out.println(getDynamoService().getJobs("123456").get(0).getJobName());
+		System.out.println(getDynamoService().getPeople("first@second.third").get(0).getUniversity());
         
 	}
 	
 	@RequestMapping(value = "/company/{name}", method = RequestMethod.GET)
 	public void searchCompany(@PathVariable("name") String name,Model model) {
-		System.out.println(getDynamoService().getCompanies("dhur").get(0).getOverview());
+		System.out.println(getDynamoService().getCompanies("dhur").get(1).getOverview());
         
 	}
 	

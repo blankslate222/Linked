@@ -1,16 +1,44 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel='stylesheet' href='/linked/resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
+<title>Manage Companies</title>
+<script type="text/javascript">
+	function enableEditing(obj) {
+		document.getElementById("div-url-"+obj).style.display="none";
+		document.getElementById("div-overview-"+obj).style.display="none";
+		document.getElementById("url-"+obj).style.display="block";
+		document.getElementById("overview-"+obj).style.display="block";
+		document.getElementById("button-"+obj).style.display="block";
+	}
+	
+	function updateReview(obj) {
+		var url = document.getElementById("url-"+obj).value;
+		var overview = document.getElementById("overview-"+obj).value;
+		new Ajax.Request('/linked/company/'+obj, {
+	  		method:'put',
+	  		parameters:{url:url, overview:overview},
+	  		onSuccess: function(transport) {
+	  			location.reload(true);
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
+		
+	}
+</script>
 </head>
 <body>
 
-	<div id="header"
+<div id="header"
 		class="global-header responsive-header nav-v5-2-header responsive-1 premium-member remote-nav"
 		role="banner">
 		<div id="top-header">
@@ -56,19 +84,13 @@ Edit Profile
 
 </ul>
 </li>
-
-<li class="nav-item">
-<a href="/jobs?displayHome=&amp;trk=nav_responsive_sub_nav_jobs" class="nav-link">
-Jobs
-</a>
-</li>
 <li class="nav-item">
 <button id="nav-link-interests" class="nav-link no-link">
 Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/company/home?trk=nav_responsive_sub_nav_companies">
+<a href="/linked/company">
 Companies
 </a>
 </li>
@@ -80,11 +102,48 @@ Companies
 <script id="controlinit-http-12274-exec-18259778-7" type="text/javascript+initialized" class="li-control">LI.Controls.addControl('control-http-12274-exec-18259778-7','NavAccessibility',{linkElement:"nav-item",subNav:"sub-nav",activeClass:"active"});</script>
 </div>
 </div>
-		
-	</div>
-	
-	
-	
-	
+
+<br>
+<br>
+
+<div style="padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
+
+<h3><b>Your Companies</b></h3>
+	<c:if test="${ not empty companyProfile }">
+		<ul>
+			<c:forEach var="job" items="${companyProfile}">
+				<br/>
+				<div style="width:100%; height:1px; background:rgb(190,190,190)"></div>
+				<div style="float:right"> 
+   					<img alt="" style="border-radius: 4px;" src="/linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
+   				</div>
+				<div>
+				
+				<li><b><a href="${pageContext.request.contextPath}/company/${job.company_id}">${job.company_id}</a></b></li>
+				<div id="status-"+${job.company_id}>
+					<textarea rows="1" cols="40" placeholder="What you upto?..."></textarea>
+				</div>
+				<div>
+					<input type="button" action="postStatus('${job.company_id}')" value="Post">
+				</div>
+				<div id="div-url-${job.company_id}" >
+					<span>URL: ${job.url}</span>
+				</div>
+				
+				<div>
+					<input style="display:none" id="url-${job.company_id}" value="${job.url}"/>
+				</div>
+				<div id="div-overview-${job.company_id}" >
+					<span>Overview: ${job.overview}</span>
+				</div>
+				<div>
+   					<textarea style="width: 400px; height: 50px;display:none" id="overview-${job.company_id}" >${job.overview}</textarea>
+   				</div>
+				</div>
+				<button id="button-${job.company_id}" type="button" value="Update" onclick="updateReview('${job.company_id}')" style="display:none" class="ybtn ybtn-primary ytype">Update</button>
+			</c:forEach>
+		</ul>
+	</c:if>
+</div>
 </body>
 </html>
