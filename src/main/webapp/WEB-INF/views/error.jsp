@@ -7,6 +7,6 @@
 <title>Linked | Error</title>
 </head>
 <body>
-
+<h1>Sorry, there is some problem at Backend!!</h1>
 </body>
 </html>

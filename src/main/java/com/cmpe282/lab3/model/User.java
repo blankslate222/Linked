@@ -1,6 +1,6 @@
 package com.cmpe282.lab3.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class User {
 
@@ -9,7 +9,7 @@ public class User {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private Date lastLogin;
+	private Timestamp lastLogin;
 	public int getId() {
 		return id;
 	}
@@ -40,10 +40,10 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public Date getLastLogin() {
+	public Timestamp getLastLogin() {
 		return lastLogin;
 	}
-	public void setLastLogin(Date lastLogin) {
+	public void setLastLogin(Timestamp lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 	
