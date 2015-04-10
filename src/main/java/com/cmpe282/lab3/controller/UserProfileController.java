@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cmpe282.lab3.model.Experience;
@@ -81,17 +82,28 @@ public class UserProfileController {
 		return "redirect:/user-profile/" + email;
 	}
 
-	@RequestMapping(value = "/follow/user", method = RequestMethod.POST)
-	public void addFollowing(
-			@ModelAttribute("userProfile") UserProfile followedUser,
-			BindingResult result, Model model, HttpServletRequest req) {
+	@RequestMapping(value = "/follow/user", method = RequestMethod.GET)
+	public void followUser(
+			@RequestParam(value = "email", required = true) String followedUser,
+			HttpServletRequest req) {
 
-		String followedUserEmail = followedUser.getEmail();
+		String followedUserEmail = followedUser;
 		String userInSession = (String) req.getSession().getAttribute("user");
-		UserProfile user = userProfileService.getUserProfile(userInSession);
+		UserProfile user = getUserProfileService().getUserProfile(userInSession);
 		user.getUsersFollowed().add(followedUserEmail);
-		userProfileService.saveUserProfile(user);
+		getUserProfileService().saveUserProfile(user);
 
+	}
+
+	@RequestMapping(value = "/follow/company", method = RequestMethod.GET)
+	public void followCompany(
+			@RequestParam(value = "companyId", required = true) String company,
+			HttpServletRequest req) {
+		String email = (String) req.getSession().getAttribute("user1");
+		String companyid = company;
+		UserProfile up = getUserProfileService().getUserProfile(email);
+		up.getCompaniesFollowed().add(companyid);
+		getUserProfileService().saveUserProfile(up);
 	}
 
 }

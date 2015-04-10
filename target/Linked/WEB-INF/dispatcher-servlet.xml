@@ -1,6 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans
@@ -14,7 +15,6 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<context:component-scan base-package="package com.cmpe282.lab3.controller" />
 	<mvc:annotation-driven />
-	<import resource="simplesm-context.xml" />
 	<aop:aspectj-autoproxy /> 
 	
 	<bean
@@ -41,7 +41,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 		<property name="password" value="awsmysql" />
 	</bean>
 
-	<bean name="defaultMemcachedClient" class="com.google.code.ssm.CacheFactory">
+	<bean name="memcachedClient" class="com.google.code.ssm.CacheFactory">
 		<property name="cacheClientFactory">
 			<bean name="cacheClientFactory"
 				class="com.google.code.ssm.providers.elasticache.MemcacheClientFactoryImpl" />
@@ -68,6 +68,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 				<!-- in this use static configuration and do not try to fetch configuration 
 					of nodes from cluster (auto discovery node feature is disabled) -->
 				<property name="clientMode" value="#{T(net.spy.memcached.ClientMode).Static}" />
+				 <property name="useBinaryProtocol" value="true" />
 			</bean>
 		</property>
 	</bean>

@@ -20,12 +20,16 @@ public class MemcacheTest {
 
 	       // Store a data item for an hour.  The client will decide which cache host will store this item. 
 	     // Store a value (async) for one hour
-	        System.out.println(client.set("someKey", 3600, new UserProfile()));
+	     UserProfile set = new UserProfile();   
+	     set.setEmail("myemail");
+	     System.out.println(client.set("someKey", 3600,set ));
 	        // Retrieve a value (synchronously).
 	       //Object myObject=client.get("someKey");
 	      // client.set("Key1111", 10, "This is the data value");
 	      //System.out.println("Value is "+client.get("first@second.third").toString());
-	      System.out.println("Value is "+client.get("someKey").toString());
+	        Object obj = client.get("someKey");
+	      UserProfile up = (UserProfile)obj;
+	        System.out.println("Value is "+ up.getEmail());
 	      client.shutdown();
 	}
 

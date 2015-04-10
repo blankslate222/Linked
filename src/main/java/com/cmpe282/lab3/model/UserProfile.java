@@ -21,6 +21,7 @@ public class UserProfile implements Serializable{
 	private String certifications;
 	private List<Experience> experience = new ArrayList<Experience>();
 	private List<String> usersFollowed = new ArrayList<String>();
+	private List<String> companiesFollowed = new ArrayList<String>();
 	
 	@DynamoDBHashKey(attributeName="email")
 	public String getEmail() {
@@ -84,6 +85,14 @@ public class UserProfile implements Serializable{
 	}
 	public void setUsersFollowed(List<String> companiesFollowed) {
 		this.usersFollowed = companiesFollowed;
+	}
+	
+	@DynamoDBAttribute(attributeName="companiesFollowed")
+	public List<String> getCompaniesFollowed() {
+		return companiesFollowed;
+	}
+	public void setCompaniesFollowed(List<String> companiesFollowed) {
+		this.companiesFollowed = companiesFollowed;
 	}
 	
 }
