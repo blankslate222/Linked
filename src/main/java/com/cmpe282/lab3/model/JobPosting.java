@@ -2,6 +2,9 @@ package com.cmpe282.lab3.model;
 
 import java.util.Date;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+@DynamoDBTable(tableName = "JobPosting")
 public class JobPosting {
 
 	private String id;
@@ -9,7 +12,7 @@ public class JobPosting {
 	private String jobName;
 	private String description;
 	private Date expiry;
-	
+	@DynamoDBHashKey(attributeName = "id")
 	public String getId() {
 		return id;
 	}

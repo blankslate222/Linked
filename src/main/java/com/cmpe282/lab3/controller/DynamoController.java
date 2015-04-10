@@ -3,6 +3,8 @@
  */
 package com.cmpe282.lab3.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cmpe282.lab3.model.CompanyProfile;
+import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.User;
 import com.cmpe282.lab3.service.DynamoService;
 
@@ -74,6 +77,41 @@ public class DynamoController {
 		List<CompanyProfile> companyProfile = getDynamoService().getCompanyProfiles();
 		model.addAttribute("companyProfile", companyProfile);
 		return "manageCompany";
+	}
+	
+	@RequestMapping(value = "/status/{name}", method = RequestMethod.POST)
+	public @ResponseBody String postStatus(@PathVariable("name") String name, @RequestParam(value="status") String status, Model model) {
+		getDynamoService().postStatus(status,name);
+		return "true";
+	}
+	
+	@RequestMapping(value = "/status/{name}", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteStatus(@PathVariable("name") String name, @RequestParam(value="status") String status, Model model) {
+		getDynamoService().removePost(status,name);
+		return "true";
+	}
+	
+	@RequestMapping(value = "/job/{name}", method = RequestMethod.DELETE)
+	public @ResponseBody String deletejob(@PathVariable("name") String name, @RequestParam(value="jobId") String jobId, Model model) {
+		getDynamoService().removeJob(name,jobId);
+		return "true";
+	}
+	
+	@RequestMapping(value = "/job/{name}", method = RequestMethod.POST)
+	public @ResponseBody String postJob(@PathVariable("name") String name, @RequestParam(value="jobId") String jobId,@RequestParam(value="jobName") String jobName,@RequestParam(value="desc") String desc,@RequestParam(value="expiry") String expiry, Model model) {
+		JobPosting jobPosting = new JobPosting();
+		jobPosting.setCompanyName(name);
+		jobPosting.setDescription(desc);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			jobPosting.setExpiry(dateFormat.parse(expiry));
+		} catch (ParseException e) {
+			
+		}
+		jobPosting.setId(jobId);
+		jobPosting.setJobName(jobName);
+		getDynamoService().createJobPosting(jobPosting);
+		return "true";
 	}
 	
 	@RequestMapping(value = "/{name}", method = RequestMethod.PUT)

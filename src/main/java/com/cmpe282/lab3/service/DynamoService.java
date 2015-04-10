@@ -1,7 +1,9 @@
 package com.cmpe282.lab3.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +36,99 @@ public class DynamoService {
 		getDynamoConnection().getDynamoDBMapper().save(companyProfile);
 	}
 	
+	public void createJobPosting(JobPosting jobPosting) {
+		
+		getDynamoConnection().getDynamoDBMapper().save(jobPosting);
+		CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, jobPosting.getCompanyName());
+		ArrayList<String> lists = (ArrayList<String>) companyProfile.getJobs();
+		if(lists != null) {
+			lists.add(jobPosting.getId());
+		} else {
+			lists = new ArrayList<String>();
+			lists.add(jobPosting.getId());
+		}
+		companyProfile.setJobs(lists);
+		getDynamoConnection().getDynamoDBMapper().save(companyProfile);
+	}
+	
+	public List<String> getAllJobs(String companyName) {
+		CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, companyName);
+		return(companyProfile.getJobs());
+	}
+	
+	public List<JobPosting> getActiveJobs(String companyName) {
+		CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, companyName);
+		ArrayList<String> lists = (ArrayList<String>) companyProfile.getJobs();
+		List<JobPosting> result = null;
+		if(lists == null) {
+			return null;
+		} else {
+			result = new ArrayList<JobPosting>();
+			for(String str: lists) {
+				JobPosting jobPosting = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, str);
+				if(jobPosting.getExpiry().after(new Date())) {
+					result.add(jobPosting);
+				} else {
+					getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+				}
+			}
+		}
+		return result;
+	}
+	
+	public void removeJob(String companyName, String jobId) {
+		CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, companyName);
+		System.out.println(companyName);
+		System.out.println(jobId);
+		ArrayList<String> lists = (ArrayList<String>) companyProfile.getJobs();
+		Iterator<String> ite = lists.iterator();
+		while(ite.hasNext()) {
+			String next = ite.next();
+			if(next.equals(jobId)) {
+				JobPosting jobPosting = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, next);
+				ite.remove();
+				getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+			}
+		}
+		companyProfile.setJobs(lists);
+		getDynamoConnection().getDynamoDBMapper().save(companyProfile);
+
+	}
+	
+	
 	public CompanyProfile getCompanyProfile(String name) {
 		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
 		return c;
+	}
+	
+	public List<String> getStatusPosts(String name) {
+		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
+		return c.getStatusPost();
+	}
+	
+	public void removePost(String status, String name) {
+		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
+		ArrayList<String> arr = (ArrayList<String>) c.getStatusPost();
+		arr.remove(status);
+		c.setStatusPost(arr);
+		getDynamoConnection().getDynamoDBMapper().save(c);
+	}
+	
+	public void postStatus(String status, String name) {
+		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
+		ArrayList<String> statusList = (ArrayList<String>) c.getStatusPost();
+		if(statusList != null && statusList.size() == 0) {
+			
+			statusList.add(status);
+			
+		} else {
+			
+			statusList = new ArrayList<String>();
+			statusList.add(status);
+			
+		}
+		c.setStatusPost(statusList);
+		getDynamoConnection().getDynamoDBMapper().save(c);
 	}
 	
 	public List<CompanyProfile> getCompanyProfiles() {
@@ -198,4 +290,6 @@ public class DynamoService {
 		System.out.println("5");
 		return lists;
 	}
+	
+	
 }

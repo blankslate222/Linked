@@ -18,6 +18,12 @@
 		document.getElementById("button-"+obj).style.display="block";
 	}
 	
+	function enableJob(obj) {
+		
+		document.getElementById("job-"+obj).style.display="block";
+		
+	}
+	
 	function updateReview(obj) {
 		var url = document.getElementById("url-"+obj).value;
 		var overview = document.getElementById("overview-"+obj).value;
@@ -33,6 +39,81 @@
 	  		}
 		});
 		
+	}
+	
+	function postStatus(obj) {
+		var status = document.getElementById("status-"+obj).value;
+		
+		new Ajax.Request('/Linked/company/status/'+obj, {
+	  		method:'post',
+	  		parameters:{status:status},
+	  		onSuccess: function(transport) {
+	  			location.reload(true);
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
+	}
+	
+	function deleteStatus(obj,name) {
+		new Ajax.Request('/Linked/company/status/'+name, {
+	  		method:'delete',
+	  		parameters:{status:obj},
+	  		onSuccess: function(transport) {
+	  			location.reload(true);
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
+	}
+	
+	function createJob(obj) {
+		var jobId = document.getElementById(obj+"-job-id").value;
+		var jobName = document.getElementById(obj+"-jobName").value;
+		var desc = document.getElementById(obj+"-description").value;
+		var expiry = document.getElementById(obj+"-expiry").value;
+		new Ajax.Request('/Linked/company/job/'+obj, {
+	  		method:'post',
+	  		parameters:{jobId:jobId,jobName:jobName,desc:desc,expiry:expiry},
+	  		onSuccess: function(transport) {
+	  			location.reload(true);
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
+	}
+	
+	function getJobs(obj) {
+		new Ajax.Request('/Linked/company/job/'+obj, {
+	  		method:'get',
+	  		onSuccess: function(transport) {
+	  			
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
+	}
+	
+	function removeJobs(obj,jobId) {
+		new Ajax.Request('/Linked/company/job/'+jobId, {
+	  		method:'delete',
+	  		parameters:{jobId:obj},
+	  		onSuccess: function(transport) {
+	  			location.reload(true);
+	  			
+	  		},
+	  		onFailure: function() { 
+	  			
+	  		}
+		});
 	}
 </script>
 </head>
@@ -117,15 +198,47 @@ Companies
 				<div style="float:right"> 
    					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
    				</div>
+   				<div style="float:right"> 
+   					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/job.png" height="16" width="16" onclick="enableJob('${job.company_id}')"></img>
+   				</div>
 				<div>
 				
 				<li><b><a href="${pageContext.request.contextPath}/company/${job.company_id}">${job.company_id}</a></b></li>
 				<div id="status-"+${job.company_id}>
-					<textarea rows="1" cols="40" placeholder="What you upto?..."></textarea>
+					<textarea id="status-${job.company_id}" rows="1" cols="40" placeholder="What you upto?..."></textarea>
 				</div>
 				<div>
-					<input type="button" action="postStatus('${job.company_id}')" value="Post">
+					<input type="button" onclick="postStatus('${job.company_id}')" value="Post">
 				</div>
+				<div id="job-${job.company_id}" style="display:none">
+
+								<table>
+									<tr>
+										<td>Job Id:</td>
+										<td><input id="${job.company_id}-job-id" required="required" /></td>
+									</tr>
+									
+									<tr>
+										<td>Job Name:</td>
+										<td><input id="${job.company_id}-jobName" name="jobName"
+												required="required" /></td>
+									</tr>
+									<tr>
+										<td>Description:</td>
+										<td><input path="description" id="${job.company_id}-description"
+												name="description" required="required" /></td>
+									</tr>
+									<tr>
+										<td>Expiry:</td>
+										<td><input id="${job.company_id}-expiry"
+												name="expiry" required="required" /></td>
+									</tr>
+									<tr>
+										<td><input type="submit" id="postJob" value="POST JOB" onclick="createJob('${job.company_id}')"/></td>
+									</tr>
+								</table>
+
+							</div>
 				<div id="div-url-${job.company_id}" >
 					<span>URL: ${job.url}</span>
 				</div>
@@ -141,6 +254,39 @@ Companies
    				</div>
 				</div>
 				<button id="button-${job.company_id}" type="button" value="Update" onclick="updateReview('${job.company_id}')" style="display:none" class="ybtn ybtn-primary ytype">Update</button>
+				<div>
+				Status Posts
+				<c:if test="${ not empty job.statusPost }">
+				<c:forEach var="s" items="${job.statusPost}"> 
+				<br/>
+				<div>
+				<img alt="" style="border-radius: 4px;float:right" src="/Linked/resources/images/Delete.png" height="16" width="16" onclick="deleteStatus('${s}','${job.company_id}')"></img>
+					<p>${s}</p>
+					
+				</div>
+				
+				
+				</c:forEach>
+				</c:if>
+				</div>
+				
+				<div>
+				Jobs
+				<c:if test="${ not empty job.jobs}">
+				<c:forEach var="j" items="${job.jobs}"> 
+				<br/>
+				<div>
+				<img alt="" style="border-radius: 4px;float:right" src="/Linked/resources/images/Delete.png" height="16" width="16" onclick="removeJobs('${j}','${job.company_id}')"></img>
+					<p>${j}</p>
+					
+				</div>
+				
+				
+				</c:forEach>
+				</c:if>
+				</div>
+				
+				
 			</c:forEach>
 		</ul>
 	</c:if>

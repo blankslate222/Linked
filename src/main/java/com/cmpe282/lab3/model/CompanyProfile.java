@@ -1,6 +1,7 @@
 package com.cmpe282.lab3.model;
 
 import java.util.HashSet;
+import java.util.List;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
@@ -11,8 +12,8 @@ public class CompanyProfile {
 	private String overview;
 	private String url;
 	private String logo;
-	private HashSet<String> statusPost;
-	private HashSet<String> jobs;
+	private List<String> statusPost;
+	private List<String> jobs;
 	private int numberOfFollowers;
 	private String email;
 	
@@ -48,16 +49,17 @@ public class CompanyProfile {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	public HashSet<String> getStatusPost() {
+	
+	public List<String> getStatusPost() {
 		return statusPost;
 	}
-	public void setStatusPost(HashSet<String> statusPost) {
+	public void setStatusPost(List<String> statusPost) {
 		this.statusPost = statusPost;
 	}
-	public HashSet<String> getJobs() {
+	public List<String> getJobs() {
 		return jobs;
 	}
-	public void setJobs(HashSet<String> jobs) {
+	public void setJobs(List<String> jobs) {
 		this.jobs = jobs;
 	}
 	public int getNumberOfFollowers() {
