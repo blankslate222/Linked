@@ -56,13 +56,16 @@ public class BackController {
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/home/{email}", method = RequestMethod.GET)
+	@RequestMapping(value = "/home/{email:.+}", method = RequestMethod.GET)
 	public ModelAndView userHome(@PathVariable("email") String email,
 			Model model, HttpServletRequest req) {
 		ModelAndView modelView = null;
+
 		String userinSession = (String) req.getSession().getAttribute("user");
+		System.out.println("1 - user in sess" + userinSession);
 		if ("".equals(userinSession) || "Guest".equals(userinSession)
 				|| !email.equals(userinSession)) {
+			System.out.println("2");
 			return new ModelAndView("error");
 		}
 		// noSql data to be fetched
@@ -70,30 +73,40 @@ public class BackController {
 		UserProfile upf = null;
 		User usr = null;
 		List<String> companies = null;
-		List<String> statuses = null;
+		List<String> statuses = new ArrayList<String>();
 		try {
 			usr = getService().getUser(email);
 			upf = userProfileService.getUserProfile(email);
 			companies = upf.getCompaniesFollowed();
-			statuses = new ArrayList<String>();
-			for (String company : companies) {
-				List<String> posts = dynamoService.getStatusPosts(company);
-				int n = posts.size();
-				n = (n > 2) ? n : 2;
-				for (int i = 0; i < n; i++) {
-					statuses.add(posts.get(i));
+			if (companies.size() == 0) {
+				companies.add("You are not following any company");
+				statuses.add("No updates from the companies");
+			} else {
+				for (String company : companies) {
+					List<String> posts = dynamoService.getStatusPosts(company);
+					int n = posts.size();
+					n = (n < 2) ? n : 2;
+					for (int i = 0; i < n; i++) {
+						statuses.add(posts.get(i));
+						//System.out.println(posts.get(i));
+					}
 				}
 			}
+			System.out.println("3");
 		} catch (NullPointerException e) {
-			e.printStackTrace(System.out);
+			if (companies == null)
+				companies = new ArrayList<String>();
 			statuses.add("No updates from the companies");
 			companies.add("You are not following any company");
+			System.out.println("4");
+			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace(System.out);
+			System.out.println("5");
+			e.printStackTrace();
 			return new ModelAndView("error");
 		}
-
+		System.out.println("6");
 		modelView.addObject("user", usr);
 		modelView.addObject("companies", companies);
 		modelView.addObject("posts", statuses);
@@ -112,14 +125,17 @@ public class BackController {
 	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ModelAndView signup(@ModelAttribute("user") User user,
-			BindingResult result, Model model) {
+			BindingResult result, Model model, HttpServletRequest req) {
 		ModelAndView retView = new ModelAndView();
 		try {
 			Calendar cal = Calendar.getInstance();
 			Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
 			user.setLastLogin(timestamp);
 			getService().insertUser(user);
-
+			req.getSession().setAttribute("user", user.getEmail());
+			UserProfile defaultProfile = new UserProfile();
+			defaultProfile.setEmail(user.getEmail());
+			userProfileService.saveUserProfile(defaultProfile);
 			retView.addObject("user1", user);
 			retView.setViewName("redirect:/home/" + user.getEmail());
 		} catch (SQLException e) {
@@ -144,12 +160,18 @@ public class BackController {
 		User usr = null;
 		String email = user.getEmail();
 		String password = user.getPassword();
-		// System.out.println("user:"+email + " password:"+password);
+		System.out.println("user:" + email + " password:" + password);
 		try {
 			usr = getService().getUser(email);
+			if(usr == null) {
+				return new ModelAndView("signin").addObject("user", new User());
+				
+			}
 			if (!"".equals(password) && password.equals(usr.getPassword())) {
 				retView.addObject("user1", usr);
 				req.getSession().setAttribute("user", email);
+				System.out.println("set session to"
+						+ req.getSession().getAttribute("user"));
 				retView.setViewName("redirect:/home/" + email);
 			}
 

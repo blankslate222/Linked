@@ -8,5 +8,6 @@
 </head>
 <body>
 <h2>Linked Home Page</h2>
+<a href="/Linked/follow/company?id=eBay">ebay</a>
 </body>
 </html>

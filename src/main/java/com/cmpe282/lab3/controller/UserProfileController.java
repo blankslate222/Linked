@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cmpe282.lab3.model.CompanyProfile;
 import com.cmpe282.lab3.model.Experience;
 import com.cmpe282.lab3.model.UserProfile;
+import com.cmpe282.lab3.service.DynamoService;
 import com.cmpe282.lab3.service.UserProfileService;
 
 @Controller
 public class UserProfileController {
 
 	private UserProfileService userProfileService;
-
+	@Autowired
+	private DynamoService dynamoService;
+	
 	public UserProfileService getUserProfileService() {
 		return userProfileService;
 	}
@@ -68,6 +72,7 @@ public class UserProfileController {
 	@RequestMapping(value = "/user-profile/update", method = RequestMethod.GET)
 	public String updateProfileForm(Model model, HttpServletRequest req) {
 		String email = (String) req.getSession().getAttribute("user");
+		System.out.println("upd prof email sess" + email);
 		UserProfile user = getUserProfileService().getUserProfile(email);
 		model.addAttribute("userProfile", user);
 		return "userProfile";
@@ -78,6 +83,7 @@ public class UserProfileController {
 			@ModelAttribute("userProfile") UserProfile userProfile,
 			BindingResult result, HttpServletRequest req) {
 		String email = (String) req.getSession().getAttribute("user");
+		System.out.println("upd prof email sess" + email);
 		getUserProfileService().updateUserProfile(email, userProfile);
 		return "redirect:/user-profile/" + email;
 	}
@@ -97,13 +103,20 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/follow/company", method = RequestMethod.GET)
 	public void followCompany(
-			@RequestParam(value = "companyId", required = true) String company,
+			@RequestParam("id") String company,
 			HttpServletRequest req) {
-		String email = (String) req.getSession().getAttribute("user1");
+		String email = (String) req.getSession().getAttribute("user");
 		String companyid = company;
+		System.out.println("company id"+company);
 		UserProfile up = getUserProfileService().getUserProfile(email);
 		up.getCompaniesFollowed().add(companyid);
 		getUserProfileService().saveUserProfile(up);
+		CompanyProfile cp = dynamoService.getCompanyProfile(companyid);
+		int followers = cp.getNumberOfFollowers();
+		followers++;
+		cp.setNumberOfFollowers(followers);
+		dynamoService.createCompanyProfile(cp);
+		
 	}
 
 }
