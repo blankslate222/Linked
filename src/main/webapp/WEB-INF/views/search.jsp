@@ -11,13 +11,23 @@
 <body>
 	
 	<h3>Linked | Search</h3>
-	<form id="job_search" method="get">
-	
+	<form id="job_search" method="get" action="${pageContext.request.contextPath}/search/job">
+	<p>Enter name of the job to be searched</p>
+	<input type="text" id="name" name="name"/>
+	<input type="submit" value="SearchJob"/>
 	</form>
-	
-	
-	
+	<form id="person_search" method="get" action="${pageContext.request.contextPath}/search/people">
+	<p>Enter email of the person to be searched</p>
+	<input type="text" id="name" name="name"/>
+	<input type="submit" value="SearchPerson"/>
+	</form>
+	<form id="company_search" method="get" action="${pageContext.request.contextPath}/search/company">
+	<p>Enter name of the company to be searched</p>
+	<input type="text" id="name" name="name"/>
+	<input type="submit" value="SearchCompany"/>
+	</form>	
 	<h3>Results</h3>
+	<p>Search parameter : ${searchTerm}</p>
 	<c:choose>
 		<c:when test="${ not empty jobResult }">
 			<ul>
