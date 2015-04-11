@@ -2,8 +2,6 @@ package com.cmpe282.lab3.controller;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -60,7 +58,11 @@ public class BackController {
 	public ModelAndView userHome(@PathVariable("email") String email,
 			Model model, HttpServletRequest req) {
 		ModelAndView modelView = null;
-
+		if("Guest".equals((String)req.getSession().getAttribute("user"))){
+			ModelAndView mv = new ModelAndView("signin");
+			mv.addObject("user",new User());
+			return mv;
+		}
 		String userinSession = (String) req.getSession().getAttribute("user");
 		System.out.println("1 - user in sess" + userinSession);
 		if ("".equals(userinSession) || "Guest".equals(userinSession)
@@ -84,15 +86,12 @@ public class BackController {
 			} else {
 				for (String company : companies) {
 					List<String> posts = dynamoService.getStatusPosts(company);
-					if(posts != null) {
-						int n = posts.size();
-						n = (n < 2) ? n : 2;
-						for (int i = 0; i < n; i++) {
-							statuses.add(posts.get(i));
-							//System.out.println(posts.get(i));
-						}
+					int n = posts.size();
+					n = (n < 2) ? n : 2;
+					for (int i = 0; i < n; i++) {
+						statuses.add(posts.get(i));
+						//System.out.println(posts.get(i));
 					}
-					
 				}
 			}
 			System.out.println("3");

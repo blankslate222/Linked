@@ -40,6 +40,9 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/user-profile/build", method = RequestMethod.GET)
 	public String createProfile(Model model, HttpServletRequest req) {
+		if("Guest".equals(req.getSession().getAttribute("user"))){
+			return "redirect:/signin";
+		}
 		UserProfile userProfile = new UserProfile();
 		List<Experience> exp = userProfile.getExperience();
 		exp.add(new Experience());
@@ -52,6 +55,9 @@ public class UserProfileController {
 	@RequestMapping(value = "/user-profile/build", method = RequestMethod.POST)
 	public String buildProfile(@ModelAttribute("userProfile") UserProfile upf,
 			BindingResult result, Model model, HttpServletRequest req) {
+		if("Guest".equals(req.getSession().getAttribute("user"))){
+			return "redirect:/signin";
+		}
 		String email = "" + req.getSession().getAttribute("user");
 		upf.setEmail(email);
 		// System.out.println(upf.getExperience().size() > 0);
@@ -65,6 +71,7 @@ public class UserProfileController {
 		ModelAndView modelAndView = new ModelAndView("displayUserProfile");
 		// System.out.println("path var email =" + email);
 		UserProfile user = getUserProfileService().getUserProfile(email);
+		
 		// System.out.println(user.getSkills());
 		modelAndView.addObject("userProfile", user);
 		return modelAndView;
@@ -72,6 +79,9 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/user-profile/update", method = RequestMethod.GET)
 	public String updateProfileForm(Model model, HttpServletRequest req) {
+		if("Guest".equals(req.getSession().getAttribute("user"))){
+			return "redirect:/signin";
+		}
 		String email = (String) req.getSession().getAttribute("user");
 		System.out.println("upd prof email sess" + email);
 		UserProfile user = getUserProfileService().getUserProfile(email);
@@ -83,6 +93,9 @@ public class UserProfileController {
 	public String updateProfile(
 			@ModelAttribute("userProfile") UserProfile userProfile,
 			BindingResult result, HttpServletRequest req) {
+		if("Guest".equals(req.getSession().getAttribute("user"))){
+			return "redirect:/signin";
+		}
 		String email = (String) req.getSession().getAttribute("user");
 		System.out.println("upd prof email sess" + email);
 		getUserProfileService().updateUserProfile(email, userProfile);
@@ -125,12 +138,8 @@ public class UserProfileController {
 	public @ResponseBody boolean followCompanyStatus(
 			@RequestParam("id") String company,
 			HttpServletRequest req) {
-		String email = (String) req.getSession().getAttribute("user");
-		String companyid = company;
-		
+		String email = (String) req.getSession().getAttribute("user");		
 		boolean up = getUserProfileService().getUserProfile(email).getCompaniesFollowed().contains(company);
-		
-		
 		return up;
 		
 	}
