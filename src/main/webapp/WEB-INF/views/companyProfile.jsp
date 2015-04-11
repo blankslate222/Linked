@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <%@taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%
+
+String email = (String) request.getSession().getAttribute("user");
+
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -89,7 +95,7 @@ Companies
 <tr><td>Company Name:</td><td><sf:input size="24" path="company_id" id="company_id" name="company_id" type="text" required = "required"/></td></tr>
 <tr><td>Company Overview:</td><td><sf:textarea path="overview" id="overview" name="overview" required = "required"/></td></tr>
 <tr><td>Company URL:</td><td><sf:input size="24" path="url" id="url" name="url" required = "required"/></td></tr>
-<tr><td>Your email address at company:&nbsp</td><td><sf:input size="24" path="email" id="email" name="email" type="email" required = "required"/></td></tr>
+<tr><td>Your email address at company:&nbsp</td><td><sf:input size="24" path="email" id="email" name="email" type="email" value = "<%=email %>" readonly="true" required = "required"/></td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><input  style="left:180px;position:relative" type="submit" id="company" value="create"/></td></tr>
 </table>

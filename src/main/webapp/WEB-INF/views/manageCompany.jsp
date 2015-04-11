@@ -117,11 +117,12 @@
 	}
 </script>
 </head>
-<body>
+<body >
+<div style="overflow:hidden;width:100%;position:absolute;height:1000px;">
 
 <div id="header"
 		class="global-header responsive-header nav-v5-2-header responsive-1 premium-member remote-nav"
-		role="banner">
+		>
 		<div id="top-header">
 			<div class="wrapper">
 				<div class="header-section first-child">
@@ -187,14 +188,14 @@ Companies
 <br>
 <br>
 
-<div style="padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
+<div style="overflow:auto;padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
 
 <h3><b>Your Companies</b></h3>
 	<c:if test="${ not empty companyProfile }">
 		<ul>
 			<c:forEach var="job" items="${companyProfile}">
 				<br/>
-				<div style="width:100%; height:1px; background:rgb(190,190,190)"></div>
+				<div style=" height:1px; background:rgb(190,190,190)"></div>
 				<div style="float:right"> 
    					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
    				</div>
@@ -239,15 +240,18 @@ Companies
 								</table>
 
 							</div>
+							<br>
+							
 				<div id="div-url-${job.company_id}" >
-					<span>URL: ${job.url}</span>
+					<span><b>URL:</b> ${job.url}</span>
 				</div>
 				
 				<div>
 					<input style="display:none" id="url-${job.company_id}" value="${job.url}"/>
 				</div>
+				
 				<div id="div-overview-${job.company_id}" >
-					<span>Overview: ${job.overview}</span>
+					<span><b>Overview:</b> ${job.overview}</span>
 				</div>
 				<div>
    					<textarea style="width: 400px; height: 50px;display:none" id="overview-${job.company_id}" >${job.overview}</textarea>
@@ -255,7 +259,7 @@ Companies
 				</div>
 				<button id="button-${job.company_id}" type="button" value="Update" onclick="updateReview('${job.company_id}')" style="display:none" class="ybtn ybtn-primary ytype">Update</button>
 				<div>
-				Status Posts
+				<b>Status Posts</b>
 				<c:if test="${ not empty job.statusPost }">
 				<c:forEach var="s" items="${job.statusPost}"> 
 				<br/>
@@ -271,7 +275,7 @@ Companies
 				</div>
 				
 				<div>
-				Jobs
+				<b>Jobs</b>
 				<c:if test="${ not empty job.jobs}">
 				<c:forEach var="j" items="${job.jobs}"> 
 				<br/>
@@ -290,6 +294,8 @@ Companies
 			</c:forEach>
 		</ul>
 	</c:if>
+</div>
+</div>
 </div>
 </body>
 </html>

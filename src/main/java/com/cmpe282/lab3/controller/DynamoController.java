@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,7 @@ import com.cmpe282.lab3.model.CompanyProfile;
 import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.User;
 import com.cmpe282.lab3.service.DynamoService;
+import com.google.gson.Gson;
 
 /**
  * @author madhur
@@ -63,18 +66,20 @@ public class DynamoController {
 	}
 	
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public ModelAndView getDynamoRecords( Model model) {
+	public ModelAndView getDynamoRecords( Model model, HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView("companyView");
-		
-		ArrayList<CompanyProfile> companyProfile = (ArrayList<CompanyProfile>) getDynamoService().getCompanyProfiles();
+		String user = (String)request.getSession().getAttribute("user");
+		ArrayList<CompanyProfile> companyProfile = (ArrayList<CompanyProfile>) getDynamoService().getCompanyProfiles(user);
 		modelAndView.addObject("companyList", companyProfile);
 		System.out.println(companyProfile.get(0).getOverview());
 		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/manage", method = RequestMethod.GET)
-	public String manageCompany(Model model) {
-		List<CompanyProfile> companyProfile = getDynamoService().getCompanyProfiles();
+	public String manageCompany(Model model, HttpServletRequest request) {
+		System.out.println(request.getSession().getAttribute("user"));
+		String user = (String)request.getSession().getAttribute("user");
+		List<CompanyProfile> companyProfile = getDynamoService().getCompanyProfiles(user);
 		model.addAttribute("companyProfile", companyProfile);
 		return "manageCompany";
 	}
@@ -95,6 +100,14 @@ public class DynamoController {
 	public @ResponseBody String deletejob(@PathVariable("name") String name, @RequestParam(value="jobId") String jobId, Model model) {
 		getDynamoService().removeJob(name,jobId);
 		return "true";
+	}
+	//
+	@RequestMapping(value = "/job/{name}", method = RequestMethod.GET)
+	public @ResponseBody String getJobs(@PathVariable("name") String name,Model model) {
+		List<JobPosting> jobs = getDynamoService().getActiveJobs(name);
+		System.out.println(new Gson().toJson(jobs));
+		return new Gson().toJson(jobs);
+
 	}
 	
 	@RequestMapping(value = "/job/{name}", method = RequestMethod.POST)

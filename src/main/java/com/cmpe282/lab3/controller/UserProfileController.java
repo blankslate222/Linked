@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cmpe282.lab3.model.CompanyProfile;
@@ -102,7 +103,7 @@ public class UserProfileController {
 	}
 
 	@RequestMapping(value = "/follow/company", method = RequestMethod.GET)
-	public void followCompany(
+	public @ResponseBody String followCompany(
 			@RequestParam("id") String company,
 			HttpServletRequest req) {
 		String email = (String) req.getSession().getAttribute("user");
@@ -116,6 +117,21 @@ public class UserProfileController {
 		followers++;
 		cp.setNumberOfFollowers(followers);
 		dynamoService.createCompanyProfile(cp);
+		return "true";
+		
+	}
+	
+	@RequestMapping(value = "/follow/company/status", method = RequestMethod.GET)
+	public @ResponseBody boolean followCompanyStatus(
+			@RequestParam("id") String company,
+			HttpServletRequest req) {
+		String email = (String) req.getSession().getAttribute("user");
+		String companyid = company;
+		
+		boolean up = getUserProfileService().getUserProfile(email).getCompaniesFollowed().contains(company);
+		
+		
+		return up;
 		
 	}
 

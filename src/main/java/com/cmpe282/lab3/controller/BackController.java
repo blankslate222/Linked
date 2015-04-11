@@ -84,12 +84,15 @@ public class BackController {
 			} else {
 				for (String company : companies) {
 					List<String> posts = dynamoService.getStatusPosts(company);
-					int n = posts.size();
-					n = (n < 2) ? n : 2;
-					for (int i = 0; i < n; i++) {
-						statuses.add(posts.get(i));
-						//System.out.println(posts.get(i));
+					if(posts != null) {
+						int n = posts.size();
+						n = (n < 2) ? n : 2;
+						for (int i = 0; i < n; i++) {
+							statuses.add(posts.get(i));
+							//System.out.println(posts.get(i));
+						}
 					}
+					
 				}
 			}
 			System.out.println("3");

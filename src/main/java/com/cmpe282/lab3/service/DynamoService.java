@@ -117,21 +117,24 @@ public class DynamoService {
 	public void postStatus(String status, String name) {
 		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
 		ArrayList<String> statusList = (ArrayList<String>) c.getStatusPost();
-		if(statusList != null && statusList.size() == 0) {
+		System.out.println(statusList);
+		if(statusList != null && statusList.size() > 0) {
 			
 			statusList.add(status);
-			
+			System.out.println(statusList);
 		} else {
 			
 			statusList = new ArrayList<String>();
 			statusList.add(status);
 			
 		}
+		System.out.println(statusList);
 		c.setStatusPost(statusList);
+		
 		getDynamoConnection().getDynamoDBMapper().save(c);
 	}
 	
-	public List<CompanyProfile> getCompanyProfiles() {
+	public List<CompanyProfile> getCompanyProfiles(String user) {
 		ArrayList<String> ids = new ArrayList<String>();
 		 
 	    ScanResult result = null;
@@ -161,8 +164,9 @@ public class DynamoService {
 	    List<CompanyProfile> lists = new ArrayList<CompanyProfile>();
 	    for(int i=0;i<ids.size();i++) {
 	    	CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, ids.get(i));
-	    	
-	    	lists.add(companyProfile);
+	    	if(companyProfile.getEmail().equals(user)) {
+	    		lists.add(companyProfile);
+	    	}
 	    }
 	    return lists;
 	}

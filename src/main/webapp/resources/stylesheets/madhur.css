@@ -17332,6 +17332,15 @@ html body #body .hp-nus-wrapper{
 	padding:0
 }
 
+html {
+    overflow-y: scroll;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none;
+    outline: 0px none;
+    height:800px;
+}
+
 #main{
 	margin-left:auto;
 	margin-right:auto;
