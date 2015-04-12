@@ -229,6 +229,8 @@ public class BackController {
 		model.addObject("joblist", joblist);
 		return model;
 	}
+	
+	
 
 	/***
 	 * SignOut update lastLogin time, destroy session, go to signin page.
@@ -255,6 +257,15 @@ public class BackController {
 			view = "error";
 		}
 		return view;
+	}
+	
+	@RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
+	public ModelAndView jobPostingPage(@PathVariable("id") String name) {
+		ModelAndView model = new ModelAndView("jobResult");
+
+		
+		model.addObject(dynamoService.getJobPosting(name));
+		return model;
 	}
 
 }

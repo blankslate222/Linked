@@ -14,6 +14,7 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.amazonaws.services.elastictranscoder.model.Job;
 import com.cmpe282.lab3.model.CompanyProfile;
 import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.UserProfile;
@@ -102,6 +103,11 @@ public class DynamoService {
 	
 	public CompanyProfile getCompanyProfile(String name) {
 		CompanyProfile c = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, name);
+		return c;
+	}
+	
+	public JobPosting getJobPosting(String name) {
+		JobPosting c = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, name);
 		return c;
 	}
 	
@@ -210,7 +216,11 @@ public class DynamoService {
 		List<JobPosting> lists = new ArrayList<JobPosting>();
 		for(int i=0;i<ids.size();i++) {
 			JobPosting companyProfile = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, ids.get(i));
-			lists.add(companyProfile);
+			if(companyProfile.getExpiry().after(new Date())) {
+				lists.add(companyProfile);
+			} else {
+				getDynamoConnection().getDynamoDBMapper().delete(companyProfile);
+			}
 		}
 		System.out.println("5");
 		return lists;

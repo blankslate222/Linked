@@ -61,7 +61,8 @@ private DynamoService dynamoService;
 	public ModelAndView searchJob(@RequestParam("name") String idOrName,Model model) {
 		ModelAndView search = new ModelAndView("search");
 		List<JobPosting> result = null;
-		result = getDynamoService().getActiveJobs(idOrName);
+		System.out.println(idOrName);
+		result = getDynamoService().getJobs(idOrName);
 		search.addObject("jobResult", result);
 		search.addObject("searchTerm", idOrName);
 		//System.out.println(result.get(0).getJobName());
@@ -89,5 +90,7 @@ private DynamoService dynamoService;
 		//System.out.println(getDynamoService().getCompanies(name).get(1).getOverview());
 		return search;
 	}
+	
+	
 	
 }

@@ -102,7 +102,7 @@ Companies
 		<c:when test="${ not empty jobResult }">
 			<ul>
 				<c:forEach var="job" items="${jobResult}">
-					<li><a href="${pageContext.request.contextPath}/job/${job.id}">${job.name}</a></li>
+					<li><a href="${pageContext.request.contextPath}/job/${job.id}">${job.id}</a></li>
 				</c:forEach>
 			</ul>
 		</c:when>

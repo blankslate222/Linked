@@ -7,9 +7,45 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
+<script type="text/javascript">
+
+function followUser(str) {
+	new Ajax.Request('/Linked/follow/user', {
+  		method:'get',
+  		parameters:{email:str},
+  		onSuccess: function(transport) {
+  			location.reload(true);
+  			
+  		},
+  		onFailure: function() { 
+  			
+  		}
+	});
+}
+
+function followUserStatus(str) {
+	new Ajax.Request('/Linked/follow/user/status', {
+  		method:'get',
+  		parameters:{email:str},
+  		onSuccess: function(transport) {
+  			if(transport.responseText.trim() == "true") {
+  				document.getElementById('follow-button').style.display="none";
+  			} else {
+  				
+  			}
+  			
+  		},
+  		onFailure: function() { 
+  			
+  		}
+	});
+}
+
+</script>
 <title>Linked | User</title>
 </head>
-<body>
+<body onload="followUserStatus('${userProfile.email}')">
 <div id="header" style="position:absolute"
 		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
 		>
@@ -73,9 +109,17 @@ Companies
 
 <br>
 <br>
+
 <div style="overflow:auto;padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
 <h1><b>User profile</b></h1>
 <br/>
+<c:if test="${sessionScope.user ne userProfile.email}">
+<input id="follow-button" type="button" value="follow" onclick="followUser('${userProfile.email}')" style="background-color: #F6E312;border-color: #E9AC1A;
+    border-top-color: #E9AC1A;
+    border-right-color-value: #E9AC1A;
+    border-bottom-color: #E9AC1A;
+    border-left-color-value: #E9AC1A;background-image: -moz-linear-gradient(center top , #F6E312 0%, #F9C80D 100%);">
+</c:if>
 <table>
 <tr><td>Bio:</td><td>${userProfile.summary}</td></tr>
 <tr><td>Highest Degree:</td><td>${userProfile.highestDegree}</td></tr>
@@ -94,6 +138,7 @@ Companies
 <c:if test="${sessionScope.user eq userProfile.email}">
 <a href="${pageContext.request.contextPath}/user-profile/update">Update Profile</a>
 </c:if>
+</div>
 </div>
 </body>
 </html>
