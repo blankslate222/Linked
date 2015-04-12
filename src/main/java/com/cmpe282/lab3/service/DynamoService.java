@@ -144,6 +144,27 @@ public class DynamoService {
 		getDynamoConnection().getDynamoDBMapper().save(c);
 	}
 	
+	public void postUserStatus(String status, String name) {
+		System.out.println(name);
+		UserProfile c = getDynamoConnection().getDynamoDBMapper().load(UserProfile.class, name);
+		ArrayList<String> statusList = (ArrayList<String>) c.getStatus();
+		System.out.println(statusList);
+		if(statusList != null) {
+			System.out.println("status is "+status);
+			statusList.add(status);
+			System.out.println("not null"+statusList);
+		} else {
+			
+			statusList = new ArrayList<String>();
+			statusList.add(status);
+			
+		}
+		System.out.println(statusList);
+		c.setStatus(statusList);
+		
+		getDynamoConnection().getDynamoDBMapper().save(c);
+	}
+	
 	public List<CompanyProfile> getCompanyProfiles(String user) {
 		ArrayList<String> ids = new ArrayList<String>();
 		 

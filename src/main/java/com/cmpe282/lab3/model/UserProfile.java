@@ -22,7 +22,14 @@ public class UserProfile implements Serializable{
 	private List<Experience> experience = new ArrayList<Experience>();
 	private List<String> usersFollowed = new ArrayList<String>();
 	private List<String> companiesFollowed = new ArrayList<String>();
+	private List<String> status = new ArrayList<String>();
 	
+	public List<String> getStatus() {
+		return status;
+	}
+	public void setStatus(List<String> status) {
+		this.status = status;
+	}
 	@DynamoDBHashKey(attributeName="email")
 	public String getEmail() {
 		return email;

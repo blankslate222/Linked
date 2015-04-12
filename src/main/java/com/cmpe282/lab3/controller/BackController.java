@@ -75,11 +75,18 @@ public class BackController {
 	        UserProfile upf = null;
 	        User usr = null;
 	        List<String> companies = null;
+	        List<String> users = null;
 	        List<String> statuses = new ArrayList<String>();
+	        
 	        try {
 	            usr = getService().getUser(email);
 	            upf = userProfileService.getUserProfile(email);
 	            companies = upf.getCompaniesFollowed();
+	            users = upf.getUsersFollowed();
+	            if(users == null) {
+	            	users = new ArrayList<String>();
+	            	users.add("You are not following anybody");
+	            }
 	            if (companies == null) {
 	                companies = new ArrayList<String>();
 	                companies.add("You are not following any company");
@@ -118,6 +125,7 @@ public class BackController {
 		modelView.addObject("user", usr);
 		modelView.addObject("companies", companies);
 		modelView.addObject("posts", statuses);
+		modelView.addObject("users", users);
 		// System.out.println(user.getFirstName()+ " " + user.getLastName());
 		return modelView;
 	}

@@ -103,8 +103,8 @@ public class UserProfileController {
 	}
 
 	@RequestMapping(value = "/follow/user", method = RequestMethod.GET)
-	public void followUser(
-			@RequestParam(value = "email", required = true) String followedUser,
+	public @ResponseBody String followUser(
+			@RequestParam("email") String followedUser,
 			HttpServletRequest req) {
 
 		String followedUserEmail = followedUser;
@@ -112,7 +112,7 @@ public class UserProfileController {
 		UserProfile user = getUserProfileService().getUserProfile(userInSession);
 		user.getUsersFollowed().add(followedUserEmail);
 		getUserProfileService().saveUserProfile(user);
-
+		return "true";
 	}
 
 	@RequestMapping(value = "/follow/company", method = RequestMethod.GET)
@@ -140,6 +140,22 @@ public class UserProfileController {
 			HttpServletRequest req) {
 		String email = (String) req.getSession().getAttribute("user");		
 		boolean up = getUserProfileService().getUserProfile(email).getCompaniesFollowed().contains(company);
+		return up;
+		
+	}
+	
+	@RequestMapping(value = "/user/status", method = RequestMethod.POST)
+	public @ResponseBody String postStatus(@RequestParam("email") String name, @RequestParam(value="status") String status, Model model) {
+		dynamoService.postUserStatus(status,name);
+		return "true";
+	}
+	
+	@RequestMapping(value = "/follow/user/status", method = RequestMethod.GET)
+	public @ResponseBody boolean followUserStatus(
+			@RequestParam("email") String company,
+			HttpServletRequest req) {
+		String email = (String) req.getSession().getAttribute("user");		
+		boolean up = getUserProfileService().getUserProfile(email).getUsersFollowed().contains(company);
 		return up;
 		
 	}

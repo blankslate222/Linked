@@ -11,6 +11,7 @@
 <script type="text/javascript">
 
 function followUser(str) {
+	alert(str);
 	new Ajax.Request('/Linked/follow/user', {
   		method:'get',
   		parameters:{email:str},
@@ -132,6 +133,13 @@ Companies
  	<td>${experience.getCompany()}</td>
  	<td>Number of Years:</td>
  	<td>${experience.getNumberOfYears()}</td></tr>
+ </c:forEach>
+ 
+ <tr><td>Status updates</td></tr>
+<c:forEach items="${userProfile.status}" var="statusU" varStatus="status">
+ 	<tr>
+ 	<td>${statusU}</td>
+ 	</tr>
  </c:forEach>
 </table>
 <br/>

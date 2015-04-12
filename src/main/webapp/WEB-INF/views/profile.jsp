@@ -7,6 +7,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
+<script type="text/javascript">
+
+function postStatus(obj) {
+	var status = document.getElementById("status").value;
+	
+	new Ajax.Request('/Linked/user/status', {
+  		method:'post',
+  		parameters:{status:status,email:obj},
+  		onSuccess: function(transport) {
+  			location.reload(true);
+  			
+  		},
+  		onFailure: function() { 
+  			
+  		}
+	});
+}
+</script>
 <title>Home | ${user.firstName}</title>
 </head>
 <body >
@@ -80,10 +99,22 @@ Companies
 	
 		<h1><b><font size="20" color="#008CC9">${user.firstName} ${user.lastName}</font></b></h1>
 		
+		<div id="status-div">
+					<textarea id="status" rows="1" cols="40" placeholder="What you upto?..."></textarea>
+				</div>
+				<div>
+					<input type="button" onclick="postStatus('<%=request.getSession().getAttribute("user") %>')" value="Post">
+				</div>
+		
 		<p><b>Companies that you are following</b></p>
 		<c:forEach items="${companies}" var="company"
 			varStatus="status">
 			${company}
+		</c:forEach>
+		<p><b>People that you are following</b></p>
+		<c:forEach items="${users}" var="user"
+			varStatus="status">
+			${user}
 		</c:forEach>
 	<p><b>Status posts of the companies you are following</b></p>
 	<c:forEach items="${posts}" var="post"
