@@ -58,22 +58,26 @@ public class DynamoService {
 	
 	public List<JobPosting> getActiveJobs(String companyName) {
 		CompanyProfile companyProfile = getDynamoConnection().getDynamoDBMapper().load(CompanyProfile.class, companyName);
-		ArrayList<String> lists = (ArrayList<String>) companyProfile.getJobs();
-		List<JobPosting> result = null;
-		if(lists == null) {
-			return null;
-		} else {
-			result = new ArrayList<JobPosting>();
-			for(String str: lists) {
-				JobPosting jobPosting = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, str);
-				if(jobPosting.getExpiry().after(new Date())) {
-					result.add(jobPosting);
-				} else {
-					getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+		if( companyProfile != null) {
+			ArrayList<String> lists = (ArrayList<String>) companyProfile.getJobs();
+			List<JobPosting> result = null;
+			if(lists == null) {
+				return null;
+			} else {
+				result = new ArrayList<JobPosting>();
+				for(String str: lists) {
+					JobPosting jobPosting = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, str);
+					if(jobPosting.getExpiry().after(new Date())) {
+						result.add(jobPosting);
+					} else {
+						getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+					}
 				}
 			}
+			return result;
 		}
-		return result;
+		return null;
+		
 	}
 	
 	public void removeJob(String companyName, String jobId) {
