@@ -62,6 +62,9 @@ function followUserStatus(str) {
 					
 		
 				</div>
+				<a style="float: right" href="/Linked/signout"> <b><font
+						color="white">SignOut</font></b>
+				</a>
 			</div>
 		</div>
 		<div class="responsive-nav">

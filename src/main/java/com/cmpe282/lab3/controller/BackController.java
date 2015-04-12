@@ -255,9 +255,11 @@ public class BackController {
 		Calendar cal = Calendar.getInstance();
 		Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
 		try {
-			getService().updateLastLogin(timestamp, user.getEmail() + ".com");
+			System.out.println(user.getEmail());
+			getService().updateLastLogin(timestamp, user.getEmail());
 			model.addAttribute("user", new User());
 			req.getSession().setAttribute("user", "");
+			req.getSession().invalidate();
 			sessionStatus.setComplete();
 
 		} catch (SQLException e) {
