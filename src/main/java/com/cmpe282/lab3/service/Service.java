@@ -54,14 +54,19 @@ public class Service {
 		return usr;
 	}
 
-	public void insertUser(User user) throws SQLException {
-		
+	public boolean insertUser(User user) throws SQLException {
+
 		Connection conn = null;
 		PreparedStatement ps = null;
 		int insert = 0;
+		if ("".equals(user.getEmail()) || "".equals(user.getFirstName())
+				|| "".equals(user.getLastName())
+				|| "".equals(user.getPassword())) {
+			return false;
+		}
 		
 		String sql = "insert into user(email, password, firstName, lastName, lastLogin) values(?,?,?,?,?)";
-		
+
 		conn = dataSource.getConnection();
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, user.getEmail());
@@ -69,51 +74,52 @@ public class Service {
 		ps.setString(3, user.getFirstName());
 		ps.setString(4, user.getLastName());
 		ps.setTimestamp(5, user.getLastLogin());
-		
+
 		insert = ps.executeUpdate();
-		
+
 		ps.close();
 		conn.close();
+		return true;
 	}
-	
-	//Update last login time of the user.
-	public boolean updateLastLogin(Timestamp lastLogin, String email) throws SQLException {
+
+	// Update last login time of the user.
+	public boolean updateLastLogin(Timestamp lastLogin, String email)
+			throws SQLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		
-		String sql= "update  user set lastLogin = ? where email =?";
-		
+
+		String sql = "update  user set lastLogin = ? where email =?";
+
 		conn = dataSource.getConnection();
 		ps = conn.prepareStatement(sql);
 		ps.setTimestamp(1, lastLogin);
 		ps.setString(2, email);
-		int rows= ps.executeUpdate();
-		if(rows>0){
+		int rows = ps.executeUpdate();
+		if (rows > 0) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
-	
-	//get last login time of the user.
-		public  String  getLastLogin(String email)throws SQLException{
-			
-			Connection conn = null;
-			PreparedStatement ps = null;
-			
-			String sql= "select * from user where email=?";
-			
-			conn = dataSource.getConnection();
-			
-			String lastLogin=null;
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, email);
-			ResultSet rs= ps.executeQuery();
-			while(rs.next()){
-				lastLogin=rs.getString("lastLogin");
-			}
-				
-				return lastLogin;
+
+	// get last login time of the user.
+	public String getLastLogin(String email) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		String sql = "select * from user where email=?";
+
+		conn = dataSource.getConnection();
+
+		String lastLogin = null;
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, email);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			lastLogin = rs.getString("lastLogin");
 		}
+
+		return lastLogin;
+	}
 }

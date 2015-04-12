@@ -26,7 +26,7 @@ public class UserProfileService {
 	
 	@InvalidateSingleCache
 	public void saveUserProfile(UserProfile userProfile) {
-		dynamoConnection.getDynamoDBMapper().save(userProfile);
+		dynamoConnection.getDynamoDBMapper().save(userProfile);;
 	}
 	
 	@UpdateSingleCache(expiration = 180)

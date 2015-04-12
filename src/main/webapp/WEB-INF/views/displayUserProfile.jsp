@@ -27,6 +27,8 @@
  </c:forEach>
 </table>
 <br/>
+<c:if test="${sessionScope.user eq userProfile.email}">
 <a href="${pageContext.request.contextPath}/user-profile/update">Update Profile</a>
+</c:if>
 </body>
 </html>
