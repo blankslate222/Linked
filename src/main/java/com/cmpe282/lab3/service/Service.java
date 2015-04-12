@@ -32,7 +32,7 @@ public class Service {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
-		User usr = new User();
+		User usr = null;
 
 		conn = dataSource.getConnection();
 		ps = conn.prepareStatement(sql);
@@ -40,6 +40,7 @@ public class Service {
 		rs = ps.executeQuery();
 
 		if (rs.next()) {
+			usr = new User();
 			usr.setId(rs.getInt("id"));
 			usr.setEmail(rs.getString("email"));
 			usr.setPassword(rs.getString("password"));
