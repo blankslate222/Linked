@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
 <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <title>Manage Companies</title>
 <script type="text/javascript">
@@ -24,10 +24,10 @@
 		
 	}
 	
-	function updateReview(obj) {
+	function updateReview(obj,prefix) {
 		var url = document.getElementById("url-"+obj).value;
 		var overview = document.getElementById("overview-"+obj).value;
-		new Ajax.Request('/Linked/company/'+obj, {
+		new Ajax.Request(prefix+'/company/'+obj, {
 	  		method:'put',
 	  		parameters:{url:url, overview:overview},
 	  		onSuccess: function(transport) {
@@ -41,10 +41,10 @@
 		
 	}
 	
-	function postStatus(obj) {
+	function postStatus(obj, prefix) {
 		var status = document.getElementById("status-"+obj).value;
 		
-		new Ajax.Request('/Linked/company/status/'+obj, {
+		new Ajax.Request(prefix+'/company/status/'+obj, {
 	  		method:'post',
 	  		parameters:{status:status},
 	  		onSuccess: function(transport) {
@@ -57,8 +57,8 @@
 		});
 	}
 	
-	function deleteStatus(obj,name) {
-		new Ajax.Request('/Linked/company/status/'+name, {
+	function deleteStatus(obj,name,prefix) {
+		new Ajax.Request(prefix+'/company/status/'+name, {
 	  		method:'delete',
 	  		parameters:{status:obj},
 	  		onSuccess: function(transport) {
@@ -71,12 +71,12 @@
 		});
 	}
 	
-	function createJob(obj) {
+	function createJob(obj,prefix) {
 		var jobId = document.getElementById(obj+"-job-id").value;
 		var jobName = document.getElementById(obj+"-jobName").value;
 		var desc = document.getElementById(obj+"-description").value;
 		var expiry = document.getElementById(obj+"-expiry").value;
-		new Ajax.Request('/Linked/company/job/'+obj, {
+		new Ajax.Request(prefix+'/company/job/'+obj, {
 	  		method:'post',
 	  		parameters:{jobId:jobId,jobName:jobName,desc:desc,expiry:expiry},
 	  		onSuccess: function(transport) {
@@ -89,8 +89,8 @@
 		});
 	}
 	
-	function getJobs(obj) {
-		new Ajax.Request('/Linked/company/job/'+obj, {
+	function getJobs(obj,prefix) {
+		new Ajax.Request(prefix+'/company/job/'+obj, {
 	  		method:'get',
 	  		onSuccess: function(transport) {
 	  			
@@ -102,8 +102,8 @@
 		});
 	}
 	
-	function removeJobs(obj,jobId) {
-		new Ajax.Request('/Linked/company/job/'+jobId, {
+	function removeJobs(obj,jobId,prefix) {
+		new Ajax.Request(prefix+'/company/job/'+jobId, {
 	  		method:'delete',
 	  		parameters:{jobId:obj},
 	  		onSuccess: function(transport) {
@@ -127,14 +127,14 @@
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="/Linked/resources/images/logo.png">
+							src="../resources/images/logo.png">
 					</h2>
 					
 					
 					
 		
 				</div>
-				<a style="float: right" href="/Linked/signout"> <b><font
+				<a style="float: right" href="${pageContext.request.contextPath}/signout"> <b><font
 						color="white">SignOut</font></b>
 				</a>
 			</div>
@@ -143,12 +143,12 @@
 <div class="wrapper">
 <ul id="control_gen_4" class="nav main-nav">
 <li class="nav-item">
-<a href="/Linked/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
+<a href="${pageContext.request.contextPath}/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
 Home
 </a>
 </li>
 <li class="nav-item">
-<a href="/Linked/search" class="nav-link">
+<a href="${pageContext.request.contextPath}/search" class="nav-link">
 Search
 </a>
 </li>
@@ -158,7 +158,7 @@ Profile
 </a>
 <ul class="sub-nav" id="profile-sub-nav">
 <li>
-<a href="/Linked/user-profile/<%= request.getSession().getAttribute("user")%>">
+<a href="${pageContext.request.contextPath}/user-profile/<%= request.getSession().getAttribute("user")%>">
 Edit Profile
 </a>
 </li>
@@ -171,7 +171,7 @@ Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/Linked/company">
+<a href="${pageContext.request.contextPath}/company">
 Companies
 </a>
 </li>
@@ -197,10 +197,10 @@ Companies
 				<br/>
 				<div style=" height:1px; background:rgb(190,190,190)"></div>
 				<div style="float:right"> 
-   					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}')"></img>
+   					<img alt="" style="border-radius: 4px;" src="../resources/images/edit.png" height="16" width="16" onclick="enableEditing('${job.company_id}','${pageContext.request.contextPath}')"></img>
    				</div>
    				<div style="float:right"> 
-   					<img alt="" style="border-radius: 4px;" src="/Linked/resources/images/job.png" height="16" width="16" onclick="enableJob('${job.company_id}')"></img>
+   					<img alt="" style="border-radius: 4px;" src="../resources/images/job.png" height="16" width="16" onclick="enableJob('${job.company_id}','${pageContext.request.contextPath}')"></img>
    				</div>
 				<div>
 				
@@ -209,7 +209,7 @@ Companies
 					<textarea id="status-${job.company_id}" rows="1" cols="40" placeholder="What you upto?..."></textarea>
 				</div>
 				<div>
-					<input type="button" onclick="postStatus('${job.company_id}')" value="Post">
+					<input type="button" onclick="postStatus('${job.company_id}','${pageContext.request.contextPath}')" value="Post">
 				</div>
 				<div id="job-${job.company_id}" style="display:none">
 
@@ -235,7 +235,7 @@ Companies
 												name="expiry" required="required" /></td>
 									</tr>
 									<tr>
-										<td><input type="submit" id="postJob" value="POST JOB" onclick="createJob('${job.company_id}')"/></td>
+										<td><input type="submit" id="postJob" value="POST JOB" onclick="createJob('${job.company_id}','${pageContext.request.contextPath}')"/></td>
 									</tr>
 								</table>
 
@@ -257,14 +257,14 @@ Companies
    					<textarea style="width: 400px; height: 50px;display:none" id="overview-${job.company_id}" >${job.overview}</textarea>
    				</div>
 				</div>
-				<button id="button-${job.company_id}" type="button" value="Update" onclick="updateReview('${job.company_id}')" style="display:none" class="ybtn ybtn-primary ytype">Update</button>
+				<button id="button-${job.company_id}" type="button" value="Update" onclick="updateReview('${job.company_id}','${pageContext.request.contextPath}')" style="display:none" class="ybtn ybtn-primary ytype">Update</button>
 				<div>
 				<b>Status Posts</b>
 				<c:if test="${ not empty job.statusPost }">
 				<c:forEach var="s" items="${job.statusPost}"> 
 				<br/>
 				<div>
-				<img alt="" style="border-radius: 4px;float:right" src="/Linked/resources/images/Delete.png" height="16" width="16" onclick="deleteStatus('${s}','${job.company_id}')"></img>
+				<img alt="" style="border-radius: 4px;float:right" src="../resources/images/Delete.png" height="16" width="16" onclick="deleteStatus('${s}','${job.company_id}','${pageContext.request.contextPath}')"></img>
 					<p>${s}</p>
 					
 				</div>
@@ -280,7 +280,7 @@ Companies
 				<c:forEach var="j" items="${job.jobs}"> 
 				<br/>
 				<div>
-				<img alt="" style="border-radius: 4px;float:right" src="/Linked/resources/images/Delete.png" height="16" width="16" onclick="removeJobs('${j}','${job.company_id}')"></img>
+				<img alt="" style="border-radius: 4px;float:right" src="../resources/images/Delete.png" height="16" width="16" onclick="removeJobs('${j}','${job.company_id}','${pageContext.request.contextPath}')"></img>
 					<p>${j}</p>
 					
 				</div>

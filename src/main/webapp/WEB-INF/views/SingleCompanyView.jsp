@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
 <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <title>Manage Companies</title>
 <script type="text/javascript">
@@ -24,10 +24,10 @@
 		
 	}
 	
-	function updateReview(obj) {
+	function updateReview(obj,prefix) {
 		var url = document.getElementById("url-"+obj).value;
 		var overview = document.getElementById("overview-"+obj).value;
-		new Ajax.Request('/Linked/company/'+obj, {
+		new Ajax.Request(prefix+'/company/'+obj, {
 	  		method:'put',
 	  		parameters:{url:url, overview:overview},
 	  		onSuccess: function(transport) {
@@ -41,10 +41,10 @@
 		
 	}
 	
-	function postStatus(obj) {
+	function postStatus(obj,prefix) {
 		var status = document.getElementById("status-"+obj).value;
 		
-		new Ajax.Request('/Linked/company/status/'+obj, {
+		new Ajax.Request(prefix+'/company/status/'+obj, {
 	  		method:'post',
 	  		parameters:{status:status},
 	  		onSuccess: function(transport) {
@@ -57,8 +57,8 @@
 		});
 	}
 	
-	function deleteStatus(obj,name) {
-		new Ajax.Request('/Linked/company/status/'+name, {
+	function deleteStatus(obj,name,prefix) {
+		new Ajax.Request(prefix+'/company/status/'+name, {
 	  		method:'delete',
 	  		parameters:{status:obj},
 	  		onSuccess: function(transport) {
@@ -71,12 +71,12 @@
 		});
 	}
 	
-	function createJob(obj) {
+	function createJob(obj,prefix) {
 		var jobId = document.getElementById(obj+"-job-id").value;
 		var jobName = document.getElementById(obj+"-jobName").value;
 		var desc = document.getElementById(obj+"-description").value;
 		var expiry = document.getElementById(obj+"-expiry").value;
-		new Ajax.Request('/Linked/company/job/'+obj, {
+		new Ajax.Request(prefix+'/company/job/'+obj, {
 	  		method:'post',
 	  		parameters:{jobId:jobId,jobName:jobName,desc:desc,expiry:expiry},
 	  		onSuccess: function(transport) {
@@ -89,8 +89,8 @@
 		});
 	}
 	
-	function getJobs(obj) {
-		new Ajax.Request('/Linked/company/job/'+obj, {
+	function getJobs(obj,prefix) {
+		new Ajax.Request(prefix+'/company/job/'+obj, {
 	  		method:'get',
 	  		onSuccess: function(transport) {
 	  			buildUI(transport.responseText);
@@ -131,8 +131,8 @@
 		document.getElementById('job-detail').appendChild(table);
 	}
 	
-	function removeJobs(obj,jobId) {
-		new Ajax.Request('/Linked/company/job/'+jobId, {
+	function removeJobs(obj,jobId,prefix) {
+		new Ajax.Request(prefix+'/company/job/'+jobId, {
 	  		method:'delete',
 	  		parameters:{jobId:obj},
 	  		onSuccess: function(transport) {
@@ -145,8 +145,8 @@
 		});
 	}
 	
-	function followCompany(str) {
-		new Ajax.Request('/Linked/follow/company/', {
+	function followCompany(str,prefix) {
+		new Ajax.Request(prefix+'/follow/company/', {
 	  		method:'get',
 	  		parameters:{id:str},
 	  		onSuccess: function(transport) {
@@ -159,8 +159,8 @@
 		});
 	}
 	
-	function followCompanyStatus(str) {
-		new Ajax.Request('/Linked/follow/company/status', {
+	function followCompanyStatus(str,prefix) {
+		new Ajax.Request(prefix+'/follow/company/status', {
 	  		method:'get',
 	  		parameters:{id:str},
 	  		onSuccess: function(transport) {
@@ -178,7 +178,7 @@
 	}
 </script>
 </head>
-<body onload="getJobs('${companyProfile.company_id}');followCompanyStatus('${companyProfile.company_id}');">
+<body onload="getJobs('${companyProfile.company_id}','${pageContext.request.contextPath}');followCompanyStatus('${companyProfile.company_id}','${pageContext.request.contextPath}');">
 
 <div id="header" style="position:absolute"
 		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
@@ -188,14 +188,14 @@
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="/Linked/resources/images/logo.png">
+							src="../resources/images/logo.png">
 					</h2>
 					
 					
 					
 		
 				</div>
-				<a style="float: right" href="/Linked/signout"> <b><font
+				<a style="float: right" href="${pageContext.request.contextPath}/signout"> <b><font
 						color="white">SignOut</font></b>
 				</a>
 			</div>
@@ -204,12 +204,12 @@
 <div class="wrapper">
 <ul id="control_gen_4" class="nav main-nav">
 <li class="nav-item">
-<a href="/Linked/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
+<a href="${pageContext.request.contextPath}/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
 Home
 </a>
 </li>
 <li class="nav-item">
-<a href="/Linked/search" class="nav-link">
+<a href="${pageContext.request.contextPath}/search" class="nav-link">
 Search
 </a>
 </li>
@@ -219,7 +219,7 @@ Profile
 </a>
 <ul class="sub-nav" id="profile-sub-nav">
 <li>
-<a href="/Linked/user-profile/<%= request.getSession().getAttribute("user")%>">
+<a href="${pageContext.request.contextPath}/user-profile/<%= request.getSession().getAttribute("user")%>">
 Edit Profile
 </a>
 </li>
@@ -232,7 +232,7 @@ Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/Linked/company">
+<a href="${pageContext.request.contextPath}/company">
 Companies
 </a>
 </li>
@@ -246,7 +246,6 @@ Companies
 
 <br>
 <br>
-
 <div style="padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
 <br>
 <br>
@@ -258,7 +257,7 @@ Companies
       <p class="followers-count">
             <span class="followers-count-num">${companyProfile.numberOfFollowers}</span> <span class="stats-type">follower(s)</span>
       
-      <input id="follow-button" type="button" value="follow" onclick="followCompany('${companyProfile.company_id}')" style="background-color: #F6E312;border-color: #E9AC1A;
+      <input id="follow-button" type="button" value="follow" onclick="followCompany('${companyProfile.company_id}','${pageContext.request.contextPath}')" style="background-color: #F6E312;border-color: #E9AC1A;
     border-top-color: #E9AC1A;
     border-right-color-value: #E9AC1A;
     border-bottom-color: #E9AC1A;
@@ -271,7 +270,7 @@ Companies
 	
 	<c:if test="${ not empty companyProfile }">
 		<div> 
-   					<img alt="" style=" float:right;border-radius: 4px;" src="/Linked/resources/images/company.jpeg" height="100" width="100" onclick="enableEditing('${job.company_id}')"></img>
+   					<img alt="" style=" float:right;border-radius: 4px;" src="../resources/images/company.jpeg" height="100" width="100" onclick="enableEditing('${job.company_id}'),'${pageContext.request.contextPath}'"></img>
    				</div>
 		<ul>
 			

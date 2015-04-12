@@ -6,13 +6,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
 <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <script type="text/javascript">
 
-function followUser(str) {
-	alert(str);
-	new Ajax.Request('/Linked/follow/user', {
+function followUser(str, prefix) {
+	
+	new Ajax.Request(prefix+'/follow/user', {
   		method:'get',
   		parameters:{email:str},
   		onSuccess: function(transport) {
@@ -25,8 +25,8 @@ function followUser(str) {
 	});
 }
 
-function followUserStatus(str) {
-	new Ajax.Request('/Linked/follow/user/status', {
+function followUserStatus(str,prefix) {
+	new Ajax.Request(prefix+'/follow/user/status', {
   		method:'get',
   		parameters:{email:str},
   		onSuccess: function(transport) {
@@ -46,7 +46,7 @@ function followUserStatus(str) {
 </script>
 <title>Linked | User</title>
 </head>
-<body onload="followUserStatus('${userProfile.email}')">
+<body onload="followUserStatus('${userProfile.email}','${pageContext.request.contextPath}')">
 <div id="header" style="position:absolute"
 		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
 		>
@@ -55,14 +55,14 @@ function followUserStatus(str) {
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="/Linked/resources/images/logo.png">
+							src="../resources/images/logo.png">
 					</h2>
 					
 					
 					
 		
 				</div>
-				<a style="float: right" href="/Linked/signout"> <b><font
+				<a style="float: right" href="${pageContext.request.contextPath}/signout"> <b><font
 						color="white">SignOut</font></b>
 				</a>
 			</div>
@@ -71,12 +71,12 @@ function followUserStatus(str) {
 <div class="wrapper">
 <ul id="control_gen_4" class="nav main-nav">
 <li class="nav-item">
-<a href="/Linked/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
+<a href="${pageContext.request.contextPath}/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
 Home
 </a>
 </li>
 <li class="nav-item">
-<a href="/Linked/search" class="nav-link">
+<a href="${pageContext.request.contextPath}/search" class="nav-link">
 Search
 </a>
 </li>
@@ -86,7 +86,7 @@ Profile
 </a>
 <ul class="sub-nav" id="profile-sub-nav">
 <li>
-<a href="/Linked/user-profile/<%= request.getSession().getAttribute("user")%>">
+<a href="${pageContext.request.contextPath}/user-profile/<%= request.getSession().getAttribute("user")%>">
 Edit Profile
 </a>
 </li>
@@ -99,7 +99,7 @@ Interests
 </button>
 <ul class="sub-nav" id="interests-sub-nav">
 <li>
-<a href="/Linked/company">
+<a href="${pageContext.request.contextPath}/company">
 Companies
 </a>
 </li>
@@ -113,12 +113,11 @@ Companies
 
 <br>
 <br>
-
 <div style="overflow:auto;padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
 <h1><b>User profile</b></h1>
 <br/>
 <c:if test="${sessionScope.user ne userProfile.email}">
-<input id="follow-button" type="button" value="follow" onclick="followUser('${userProfile.email}')" style="background-color: #F6E312;border-color: #E9AC1A;
+<input id="follow-button" type="button" value="follow" onclick="followUser('${userProfile.email}','${pageContext.request.contextPath}')" style="background-color: #F6E312;border-color: #E9AC1A;
     border-top-color: #E9AC1A;
     border-right-color-value: #E9AC1A;
     border-bottom-color: #E9AC1A;
