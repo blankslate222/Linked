@@ -86,7 +86,7 @@ public class UserProfileController {
 		System.out.println("upd prof email sess" + email);
 		UserProfile user = getUserProfileService().getUserProfile(email);
 		model.addAttribute("userProfile", user);
-		return "userProfile";
+		return "userProfileUpdate";
 	}
 
 	@RequestMapping(value = "/user-profile/update", method = RequestMethod.POST)

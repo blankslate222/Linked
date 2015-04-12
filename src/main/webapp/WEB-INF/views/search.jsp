@@ -77,21 +77,21 @@ Companies
 	<h2><b>Search</b></h2>
 	<form id="job_search" method="get" action="${pageContext.request.contextPath}/search/job">
 	<p>Enter name of the job to be searched</p>
-	<input type="text" id="name" name="name"/>
+	<input type="text" id="name" name="name" required/>
 	<input type="submit" value="Search"/>
 	</form>
 	<br>
 	<br>
 	<form id="person_search" method="get" action="${pageContext.request.contextPath}/search/people">
 	<p>Enter email of the person to be searched</p>
-	<input type="text" id="name" name="name"/>
+	<input type="text" id="name" name="name" required/>
 	<input type="submit" value="Search"/>	
 	</form>
 	<br>
 	<br>
 	<form id="company_search" method="get" action="${pageContext.request.contextPath}/search/company">
 	<p>Enter name of the company to be searched</p>
-	<input type="text" id="name" name="name"/>
+	<input type="text" id="name" name="name" required/>
 	<input type="submit" value="Search"/>
 	</form>	
 	<br>
