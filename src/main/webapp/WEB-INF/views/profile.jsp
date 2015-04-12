@@ -9,7 +9,7 @@
 <link rel='stylesheet' href='/Linked/resources/stylesheets/madhur.css' />
 <title>Home | ${user.firstName}</title>
 </head>
-<body style="overflow:auto;height:100px">
+<body >
 
 <div id="header" style="position:absolute"
 		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
@@ -32,8 +32,13 @@
 <div class="wrapper">
 <ul id="control_gen_4" class="nav main-nav">
 <li class="nav-item">
-<a href="" class="nav-link">
+<a href="/Linked/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
 Home
+</a>
+</li>
+<li class="nav-item">
+<a href="/Linked/search" class="nav-link">
+Search
 </a>
 </li>
 <li class="nav-item">
@@ -42,7 +47,7 @@ Profile
 </a>
 <ul class="sub-nav" id="profile-sub-nav">
 <li>
-<a href="">
+<a href="/Linked/user-profile/<%= request.getSession().getAttribute("user")%>">
 Edit Profile
 </a>
 </li>

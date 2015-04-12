@@ -31,8 +31,16 @@ public class UserProfileService {
 	
 	@UpdateSingleCache(expiration = 180)
 	public void updateUserProfile(@ParameterValueKeyProvider String email, UserProfile userProfile) {
-		dynamoConnection.getDynamoDBMapper().save(userProfile);
-	}
+		UserProfile user = getDynamoConnection().getDynamoDBMapper().load(UserProfile.class, email);
+		user.setCertifications(userProfile.getCertifications());
+		user.setExperience(userProfile.getExperience());
+		user.setHighestDegree(userProfile.getHighestDegree());
+		user.setSkills(userProfile.getSkills());
+		user.setSummary(userProfile.getSummary());
+		user.setUniversity(userProfile.getUniversity());
+		getDynamoConnection().getDynamoDBMapper().save(user);
+		}
+
 	
 	@ReadThroughSingleCache(expiration = 3600)
 	public UserProfile getUserProfile(@ParameterValueKeyProvider String email) {

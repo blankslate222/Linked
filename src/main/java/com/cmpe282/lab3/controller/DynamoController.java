@@ -77,7 +77,7 @@ public class DynamoController {
 	
 	@RequestMapping(value = "/manage", method = RequestMethod.GET)
 	public String manageCompany(Model model, HttpServletRequest request) {
-		System.out.println(request.getSession().getAttribute("user"));
+		
 		String user = (String)request.getSession().getAttribute("user");
 		List<CompanyProfile> companyProfile = getDynamoService().getCompanyProfiles(user);
 		model.addAttribute("companyProfile", companyProfile);

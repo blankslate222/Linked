@@ -154,6 +154,8 @@ public class BackController {
 			}
 			
 			req.getSession().setAttribute("user", user.getEmail());
+			req.getSession().setAttribute("name", user.getEmail());
+			req.getSession().setAttribute("lastLogin", user.getLastLogin());
 			UserProfile defaultProfile = new UserProfile();
 			defaultProfile.setEmail(user.getEmail());
 			userProfileService.saveUserProfile(defaultProfile);
@@ -193,6 +195,8 @@ public class BackController {
 			if (!"".equals(password) && password.equals(usr.getPassword())) {
 				retView.addObject("user1", usr);
 				req.getSession().setAttribute("user", email);
+				req.getSession().setAttribute("name", usr.getEmail());
+				req.getSession().setAttribute("lastLogin", usr.getLastLogin());
 				System.out.println("set session to"
 						+ req.getSession().getAttribute("user"));
 				retView.setViewName("redirect:/home/" + email);
