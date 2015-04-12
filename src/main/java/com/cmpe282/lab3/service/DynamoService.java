@@ -68,10 +68,12 @@ public class DynamoService {
 				result = new ArrayList<JobPosting>();
 				for(String str: lists) {
 					JobPosting jobPosting = getDynamoConnection().getDynamoDBMapper().load(JobPosting.class, str);
-					if(jobPosting.getExpiry().after(new Date())) {
+					if(jobPosting != null && jobPosting.getExpiry().after(new Date())) {
 						result.add(jobPosting);
 					} else {
-						getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+						if(jobPosting != null) {
+							getDynamoConnection().getDynamoDBMapper().delete(jobPosting);
+						}
 					}
 				}
 			}
