@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='./resources/stylesheets/madhur.css' />
 <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <script type="text/javascript">
 
@@ -55,7 +55,7 @@ function followUserStatus(str,prefix) {
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="../resources/images/logo.png">
+							src="./resources/images/logo.png">
 					</h2>
 					
 					
