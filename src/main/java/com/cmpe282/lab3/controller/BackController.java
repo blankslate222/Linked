@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -79,12 +80,17 @@ public class BackController {
 	        List<String> companies = null;
 	        List<String> users = null;
 	        List<String> statuses = new ArrayList<String>();
-	        
+	        List<String> jobs = null;
 	        try {
 	            usr = getService().getUser(email);
 	            upf = userProfileService.getUserProfile(email);
 	            companies = upf.getCompaniesFollowed();
 	            users = upf.getUsersFollowed();
+	            jobs = getService().getJobs(email);
+	            if(jobs == null) {
+	            	jobs = new ArrayList<String>();
+	            	jobs.add("You have not applied to any jobs yet");
+	            }
 	            if(users == null) {
 	            	users = new ArrayList<String>();
 	            	users.add("You are not following anybody");
@@ -128,6 +134,7 @@ public class BackController {
 		modelView.addObject("companies", companies);
 		modelView.addObject("posts", statuses);
 		modelView.addObject("users", users);
+		modelView.addObject("jobs", jobs);
 		// System.out.println(user.getFirstName()+ " " + user.getLastName());
 		return modelView;
 	}
@@ -273,12 +280,10 @@ public class BackController {
 	
 	@RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
 	public ModelAndView jobPostingPage(@PathVariable("id") String name) {
-		ModelAndView model = new ModelAndView("jobResult");
-JobPosting jp = null;
-		if((jp = dynamoService.getJobPosting(name)) != null)
-			model.addObject("applyJob", jp);
-		else
-			model.addObject("applyJob", new JobPosting());
+ModelAndView model = new ModelAndView("jobResult");
+
+		
+		model.addObject(dynamoService.getJobPosting(name));
 		return model;
 	}
 	
@@ -296,5 +301,21 @@ JobPosting jp = null;
 		}
 		return "home";
 	}
+	
+	@RequestMapping(value="/apply/job/status", method = RequestMethod.GET)
+	public @ResponseBody boolean jobApplyStatus(@RequestParam("jobId") String jobId, 
+			@RequestParam("company") String company, Model model, HttpServletRequest req) {
+		boolean status = false;
+		String email = ""+req.getSession().getAttribute("user");
+		try {
+			status = getService().jobApplyStatus(jobId, company, email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return status;
+	}
+
 
 }

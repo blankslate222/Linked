@@ -112,17 +112,30 @@ Companies
 		<p><b>Companies that you are following</b></p>
 		<c:forEach items="${companies}" var="company"
 			varStatus="status">
+			
 			${company}
+			<br>
 		</c:forEach>
 		<p><b>People that you are following</b></p>
 		<c:forEach items="${users}" var="user"
 			varStatus="status">
+			
 			${user}
+			<br>
 		</c:forEach>
 	<p><b>Status posts of the companies you are following</b></p>
 	<c:forEach items="${posts}" var="post"
 			varStatus="status">
+			
 			${post}
+			<br>
+		</c:forEach>
+		<p><b>Jobs applied</b></p>
+	<c:forEach items="${jobs}" var="job"
+			varStatus="status">
+			
+			${job}
+			<br>
 		</c:forEach>
 		</div>
 		</div>

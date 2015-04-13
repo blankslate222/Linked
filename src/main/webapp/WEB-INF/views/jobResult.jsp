@@ -6,10 +6,50 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel='stylesheet' href='./resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
+<script type="text/javascript">
+
+function applyJob(jobId,company,prefix) {
+	new Ajax.Request(prefix+'/apply/job', {
+  		method:'get',
+  		parameters:{jobId:jobId,company:company},
+  		onSuccess: function(transport) {
+  			document.getElementById("apply-button").style.display="none";
+  			
+  			
+  			document.getElementById("result").innerHTML="You applied to this job";
+  			
+  		},
+  		onFailure: function() { 
+  			
+  		}
+	});
+}
+
+function applyJobStatus(jobId,company,prefix) {
+	
+	new Ajax.Request(prefix+'/apply/job/status', {
+  		method:'get',
+  		parameters:{jobId:jobId,company:company},
+  		onSuccess: function(transport) {
+  			if(transport.responseText.trim() === "true") {
+  				document.getElementById("apply-button").style.display="none";
+  	  			document.getElementById("result").innerHTML="You applied to this job already!!!";
+  			}
+  			
+  			
+  		},
+  		onFailure: function() { 
+  			
+  		}
+	});
+}
+
+</script>
 <title>Job</title>
 </head>
-<body>
+<body onload="applyJobStatus('${jobPosting.id}','${jobPosting.companyName}','${pageContext.request.contextPath}')">
 <div id="header" style="position:absolute"
 		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
 		>
@@ -78,6 +118,12 @@ Companies
 <br>
 <div style="overflow:auto;padding: 0px;width:800px;margin: auto;background-color: #FFF;padding-left: 10px;padding-bottom: 10px;box-shadow: 0px 10px 20px 3px #D3D3D3">
 
+<input id="apply-button" type="button" value="Apply" onclick="applyJob('${jobPosting.id}','${jobPosting.companyName}','${pageContext.request.contextPath}')" style="background-color: #F6E312;border-color: #E9AC1A;
+    border-top-color: #E9AC1A;
+    border-right-color-value: #E9AC1A;
+    border-bottom-color: #E9AC1A;
+    border-left-color-value: #E9AC1A;background-image: -moz-linear-gradient(center top , #F6E312 0%, #F9C80D 100%);">
+    <div id="result"></div>
 
 <sf:form id="applyJob" modelAttribute="applyJob" action="" method="GET">
 <table>

@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -149,4 +151,48 @@ public class Service {
 		ps.close();
 		conn.close();
 	}
+	
+	public boolean jobApplyStatus(String job, String company, String email) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		boolean status = false;
+		String sql = "select * from job where jobId=? and companyName=? and userEmail=?";
+
+		conn = dataSource.getConnection();
+		ps = conn.prepareStatement(sql);
+		
+		ps.setString(1, job);
+		ps.setString(2, company);
+		
+		ps.setString(3, email);
+		
+		ResultSet resultSet = ps.executeQuery();
+		if(resultSet != null && resultSet.next()) {
+			status = true;
+		}
+		resultSet.close();
+		ps.close();
+		conn.close();
+		return status;
+	}
+	
+	public List<String> getJobs(String email) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		
+		String sql = "select * from job where  userEmail = ?";
+		List<String> jobs=new ArrayList<String>();
+		conn = dataSource.getConnection();
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, email);	
+		//ps.executeQuery(sql);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+		jobs.add(rs.getString("jobId"));
+		}
+		ps.close();
+		conn.close();
+		return jobs;
+		}
 }
