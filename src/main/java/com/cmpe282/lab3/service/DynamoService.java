@@ -31,10 +31,7 @@ import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class DynamoService {
 
-	private DynamoConnection dynamoConnection;
-
-	@Autowired
-	private CacheFactory memcachedClient;
+	private DynamoConnection dynamoConnection;	
 
 	public DynamoConnection getDynamoConnection() {
 		return dynamoConnection;
@@ -232,27 +229,37 @@ public class DynamoService {
 		}
 		return lists;
 	}
+	
+	private MemcachedClient getClient(){
+		String configEndpoint = "localhost";
+		Integer clusterPort = 11211;
+		MemcachedClient client = null;
+		
+		if(client == null) {
+			try {
+				client = new MemcachedClient(new InetSocketAddress(configEndpoint,
+						clusterPort));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return client;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<JobPosting> getJobs(String id) {
-		String configEndpoint = "localhost";
-		Integer clusterPort = 11211;
-		Object obj = null;
 		MemcachedClient client = null;
+		Object obj = null;
 		List<JobPosting> lists = new ArrayList<JobPosting>();
-		try {
-			client = new MemcachedClient(new InetSocketAddress(configEndpoint,
-					clusterPort));
-			obj = client.get(id);
-			if(obj != null) {
-				lists = (List<JobPosting>) obj;
-				System.out.println("from cache with size ="+lists.size());
-				return lists;
-			}
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		client = getClient();
+		if(client != null)
+			obj = getClient().get(id);
+		
+		if(obj != null) {
+			lists = (List<JobPosting>) obj;
+			System.out.println("from cache with size ="+lists.size());
+			return lists;
 		}
 
 		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
