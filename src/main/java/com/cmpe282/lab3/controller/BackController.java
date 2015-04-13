@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.User;
 import com.cmpe282.lab3.model.UserProfile;
 import com.cmpe282.lab3.service.DynamoService;
@@ -273,9 +274,11 @@ public class BackController {
 	@RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
 	public ModelAndView jobPostingPage(@PathVariable("id") String name) {
 		ModelAndView model = new ModelAndView("jobResult");
-
-		
-		model.addObject(dynamoService.getJobPosting(name));
+JobPosting jp = null;
+		if((jp = dynamoService.getJobPosting(name)) != null)
+			model.addObject("applyJob", jp);
+		else
+			model.addObject("applyJob", new JobPosting());
 		return model;
 	}
 	
