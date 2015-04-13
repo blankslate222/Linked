@@ -81,7 +81,7 @@ Companies
 
 <br>
 <br>
-<h1 style="position:absolute;right:200px;top:80px"><a href="/Linked/company/manage">Manage Companies</a></h1>
+<h1 style="position:absolute;right:200px;top:80px"><a href="${pageContext.request.contextPath}/company/manage">Manage Companies</a></h1>
 <div id="linked-main-div">
 
 <div style="position:absolute;top:150px;left:400px">

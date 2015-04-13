@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel='stylesheet' href='./resources/stylesheets/madhur.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Linked | Search</title>
 </head>
@@ -18,7 +18,7 @@
 				<div class="header-section first-child">
 					<h2 class="logo-container" tabindex="0">
 						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
-							src="./resources/images/logo.png">
+							src="../resources/images/logo.png">
 					</h2>
 					
 					
