@@ -18,11 +18,15 @@ import com.amazonaws.services.elastictranscoder.model.Job;
 import com.cmpe282.lab3.model.CompanyProfile;
 import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.UserProfile;
+import com.google.code.ssm.CacheFactory;
 import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class DynamoService {
 	
 	private DynamoConnection dynamoConnection;
+	
+	@Autowired
+	private CacheFactory memcachedClient;
 
 	public DynamoConnection getDynamoConnection() {
 		return dynamoConnection;
@@ -77,6 +81,7 @@ public class DynamoService {
 					}
 				}
 			}
+			//memcachedClient.getCache().set(companyName, arg1, arg2, arg3);
 			return result;
 		}
 		return null;

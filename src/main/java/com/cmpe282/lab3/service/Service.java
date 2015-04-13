@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.cmpe282.lab3.model.JobPosting;
 import com.cmpe282.lab3.model.User;
 
 public class Service {
@@ -65,7 +68,7 @@ public class Service {
 				|| "".equals(user.getPassword())) {
 			return false;
 		}
-		
+
 		String sql = "insert into user(email, password, firstName, lastName, lastLogin) values(?,?,?,?,?)";
 
 		conn = dataSource.getConnection();
@@ -122,5 +125,28 @@ public class Service {
 		}
 
 		return lastLogin;
+	}
+
+	public void updateJob(String job, String company, String email) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		Calendar cal = Calendar.getInstance();
+		Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
+		
+		String sql = "insert into job (jobId, companyName, applicationDate, userEmail) "+
+		"values(?,?,?,?)";
+
+		conn = dataSource.getConnection();
+		ps = conn.prepareStatement(sql);
+		
+		ps.setString(1, job);
+		ps.setString(2, company);
+		ps.setTimestamp(3, timestamp);
+		ps.setString(4, email);
+		
+		ps.executeUpdate();
+		ps.close();
+		conn.close();
 	}
 }

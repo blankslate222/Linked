@@ -1,11 +1,14 @@
 package com.cmpe282.lab3.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @DynamoDBTable(tableName = "JobPosting")
-public class JobPosting {
+public class JobPosting implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	private String id;
 	private String companyName;

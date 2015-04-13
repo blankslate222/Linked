@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -168,7 +169,7 @@ public class BackController {
 			defaultProfile.setEmail(user.getEmail());
 			userProfileService.saveUserProfile(defaultProfile);
 			retView.addObject("user1", user);
-			retView.setViewName("redirect:/home/" + user.getEmail());
+			retView.setViewName("redirect:/user-profile/build");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			retView.setViewName("error");
@@ -276,6 +277,21 @@ public class BackController {
 		
 		model.addObject(dynamoService.getJobPosting(name));
 		return model;
+	}
+	
+	@RequestMapping(value="/apply/job", method = RequestMethod.GET)
+	public String updateJobApply(@RequestParam("jobId") String jobId, 
+			@RequestParam("company") String company, Model model, HttpServletRequest req) {
+		
+		String email = ""+req.getSession().getAttribute("user");
+		try {
+			getService().updateJob(jobId, company, email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "error";
+		}
+		return "home";
 	}
 
 }
