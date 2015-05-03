@@ -133,6 +133,8 @@ Companies
 <c:forEach items="${userProfile.experience}" var="experience" varStatus="status">
  	<tr><td>Company:</td>
  	<td>${experience.getCompany()}</td>
+ 	<td>Position Held:</td>
+ 	<td>${experience.getPosition()}</td>
  	<td>Number of Years:</td>
  	<td>${experience.getNumberOfYears()}</td></tr>
  </c:forEach>

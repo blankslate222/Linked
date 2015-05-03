@@ -31,6 +31,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	<bean id="dynamoService" class="com.cmpe282.lab3.service.DynamoService"></bean>
 	<bean id="dynamoConnection" class="com.cmpe282.lab3.service.DynamoConnection"></bean>
 	<bean id="userProfileService" class="com.cmpe282.lab3.service.UserProfileService"></bean>
+	<bean id="recommendationService" class="com.cmpe282.lab3.service.RecommendationService"></bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 

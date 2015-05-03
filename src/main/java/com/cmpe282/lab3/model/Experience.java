@@ -11,6 +11,7 @@ public class Experience implements Serializable{
 	private static final long serialVersionUID = -4556123040864984929L;
 	
 	private String company;
+	private String position;
 	private String numberOfYears;
 	
 	@DynamoDBAttribute(attributeName = "company")
@@ -27,6 +28,14 @@ public class Experience implements Serializable{
 	}
 	public void setNumberOfYears(String numberOfYears) {
 		this.numberOfYears = numberOfYears;
+	}
+	
+	@DynamoDBAttribute(attributeName = "position")
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 }

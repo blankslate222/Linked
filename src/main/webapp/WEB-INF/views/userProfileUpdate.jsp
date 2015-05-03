@@ -93,6 +93,8 @@ Companies
 
  	<tr><td>Company:</td>
 	<td><input name="experience[${status.index}].company" value="${exp.company}"/></td>
+	<tr><td>Position Held:</td>
+	<td><input name="experience[${status.index}].position" value="${exp.position}"/></td>
  	<td>Number of Years:</td>
  	<td><input name="experience[${status.index}].numberOfYears" value="${exp.numberOfYears}"/></td></tr>
 </c:forEach>
