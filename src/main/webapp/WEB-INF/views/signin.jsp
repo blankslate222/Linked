@@ -8,6 +8,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel='stylesheet' href='./resources/stylesheets/style.css' />
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <title>Home Page</title>
 </head>
 
