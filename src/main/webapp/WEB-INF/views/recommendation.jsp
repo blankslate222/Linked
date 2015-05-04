@@ -19,6 +19,8 @@
 }
 
 </style>
+<link rel='stylesheet' href='../resources/stylesheets/madhur.css' />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"></script>
 <script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script charset = "utf-8" type = "text/javascript">
@@ -166,6 +168,85 @@ function collide(alpha) {
 </script>
 </head>
 <body>
+<div id="header" style="position:absolute"
+		class="global-header responsive-header nav-v5-2-header responsive-1 remote-nav"
+		>
+		<div id="top-header">
+			<div class="wrapper">
+				<div class="header-section first-child">
+					<h2 class="logo-container" tabindex="0">
+						<img class="logo" width="30" height="30" style="top:4px;position:absolute;left:5px;" alt="LinkedIn"
+							src="../resources/images/logo.png">
+					</h2>
+					
+					
+					
+		
+				</div>
+				<a style="float: right" href="${pageContext.request.contextPath}/signout"> <b><font
+						color="white">SignOut</font></b>
+				</a>
+			</div>
+		</div>
+		<div class="responsive-nav">
+<div class="wrapper">
+<ul id="control_gen_4" class="nav main-nav">
+<li class="nav-item">
+<a href="${pageContext.request.contextPath}/home/<%=request.getSession().getAttribute("user") %>" class="nav-link">
+Home
+</a>
+</li>
+<li class="nav-item">
+<a href="${pageContext.request.contextPath}/search" class="nav-link">
+Search
+</a>
+</li>
+<li class="nav-item">
+<a href="" class="nav-link">
+Profile
+</a>
+<ul class="sub-nav" id="profile-sub-nav">
+<li>
+<a href="${pageContext.request.contextPath}/user-profile/<%= request.getSession().getAttribute("user")%>">
+Edit Profile
+</a>
+</li>
+
+</ul>
+</li>
+<li class="nav-item">
+<button id="nav-link-interests" class="nav-link no-link">
+Interests
+</button>
+<ul class="sub-nav" id="interests-sub-nav">
+<li>
+<a href="${pageContext.request.contextPath}/company">
+Companies
+</a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="${pageContext.request.contextPath}/recommend/career-path" class="nav-link">
+Career Path
+</a>
+</li>
+</ul>
+<b style="float:right"><font color="white"><%=request.getSession().getAttribute("name") %></font></b><br>
+<b style="float:right"><font color="white">Last login time: <%=request.getSession().getAttribute("lastLogin") %></font></b>
+</div>
+</div>
+
+<br>
+<br>
+
+		</div>
+ 
+<div class="main">
+  <h3>Hello</h3>
+</div>
+   
+  
 
 </body>
 </html>
