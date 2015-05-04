@@ -68,6 +68,11 @@ Companies
 </li>
 </ul>
 </li>
+<li class="nav-item">
+<a href="${pageContext.request.contextPath}/recommend/career-path" class="nav-link">
+Career Path
+</a>
+</li>
 </ul>
 <b style="float:right"><font color="white"><%=request.getSession().getAttribute("name") %></font></b><br>
 <b style="float:right"><font color="white">Last login time: <%=request.getSession().getAttribute("lastLogin") %></font></b>
