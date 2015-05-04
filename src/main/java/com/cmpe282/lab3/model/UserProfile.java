@@ -15,6 +15,7 @@ public class UserProfile implements Serializable{
 
 	private String email;
 	private String summary;
+	private String location;
 	private String highestDegree;
 	private String university;
 	private String skills;
@@ -100,6 +101,12 @@ public class UserProfile implements Serializable{
 	}
 	public void setCompaniesFollowed(List<String> companiesFollowed) {
 		this.companiesFollowed = companiesFollowed;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

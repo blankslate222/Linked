@@ -83,6 +83,7 @@ Companies
 
 <table>
 <tr><td>Summary or Bio:</td><td><sf:input path="summary" id="summary" name="summary" type="text" /></td></tr>
+<tr><td>Location:</td><td><sf:input path="location" id="location" name="location" type="text" /></td></tr>
 <tr><td>Highest Degree:</td><td><sf:input path="highestDegree" id="highestDegree" name="highestDegree" required = "required"/></td></tr>
 <tr><td>University of highest degree:</td><td><sf:input path="university" id="university" name="university" required = "required"/></td></tr>
 <tr><td>Skills:</td><td><sf:input path="skills" id="skills" name="skills"/></td></tr>

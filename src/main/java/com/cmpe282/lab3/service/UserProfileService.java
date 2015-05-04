@@ -38,6 +38,7 @@ public class UserProfileService {
 		user.setSkills(userProfile.getSkills());
 		user.setSummary(userProfile.getSummary());
 		user.setUniversity(userProfile.getUniversity());
+		user.setLocation(userProfile.getLocation());
 		getDynamoConnection().getDynamoDBMapper().save(user);
 		}
 

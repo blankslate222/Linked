@@ -125,6 +125,7 @@ Companies
 </c:if>
 <table>
 <tr><td>Bio:</td><td>${userProfile.summary}</td></tr>
+<tr><td>Location:</td><td>${userProfile.location}</td></tr>
 <tr><td>Highest Degree:</td><td>${userProfile.highestDegree}</td></tr>
 <tr><td>University:</td><td>${userProfile.university}</td></tr>
 <tr><td>Skills:</td><td>${userProfile.skills}</td></tr>
