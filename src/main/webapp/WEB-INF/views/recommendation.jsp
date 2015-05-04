@@ -19,10 +19,14 @@
 }
 
 </style>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script>
+<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script charset = "utf-8" type = "text/javascript">
 //Constants for the SVG
-var width = 500,
+
+$(document).ready(function(){ 
+	
+	var width = 500,
     height = 500;
 
 //Set up the colour scale
@@ -38,22 +42,24 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-<c:set var="myVar" value="${request.recommendations}" />
+
 //var myjson = JSON.parse('${recommendations}');
 
-var myvar = '${myVar}';
-console.log(myvar);
-d3.json(myvar , function(error, graph) {
-     console.log('Got the graph response');
-	console.log(graph);
+    var datam = '${recommendations}';
+    var abc = jQuery.parseJSON( datam );
+	console.log(abc);
+	console.log(abc.nodes);
+	console.log(abc.links);
+	
+	
 //Creates the graph data structure out of the json data
-force.nodes(graph.nodes)
-    .links(graph.links)
+force.nodes(abc.nodes)
+    .links(abc.links)
     .start();
 
 //Create all the line svgs but without locations yet
 var link = svg.selectAll(".link")
-    .data(graph.links)
+    .data(abc.links)
     .enter().append("line")
     .attr("class", "link")
     //.style("marker-end",  "url(#suit)") 
@@ -64,7 +70,7 @@ var link = svg.selectAll(".link")
 //Do the same with the circles for the nodes - no 
 //Changed
 var node = svg.selectAll(".node")
-    .data(graph.nodes)
+    .data(abc.nodes)
     .enter().append("g")
     .attr("class", "node")
     .call(force.drag);
@@ -123,7 +129,7 @@ var padding = 1, // separation between circles
 
 
 function collide(alpha) {
-  var quadtree = d3.geom.quadtree(graph.nodes);
+  var quadtree = d3.geom.quadtree(abc.nodes);
   return function(d) {
     var rb = 2*radius + padding,
         nx1 = d.x - rb,
@@ -148,23 +154,14 @@ function collide(alpha) {
     });
   };
 }
-/*
-svg.append("defs").selectAll("marker")
-    .data(["suit", "licensing", "resolved"])
-  .enter().append("marker")
-    .attr("id", function(d) { return d; })
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 25)
-    .attr("refY", 0)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-  .append("path")
-    .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
-    .style("stroke", "#4679BD")
-    .style("opacity", "0.6");
-*/
+	
+	
 });
+
+
+
+
+
 
 </script>
 </head>
