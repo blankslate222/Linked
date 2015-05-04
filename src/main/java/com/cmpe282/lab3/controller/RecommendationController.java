@@ -53,11 +53,13 @@ public class RecommendationController {
 		String myJson = new String();
 		try {
 			
-		   File file = new File(this.getClass().getClassLoader().getResource("recommendation.json").getFile());
-		   FileOutputStream fstream = new FileOutputStream(file,false);
-		   BufferedOutputStream out = new BufferedOutputStream(fstream);
-           System.out.println("is found?"+ file.exists());
-
+		   //File file = new File(this.getClass().getClassLoader().getResource("recommendation.json").getFile());
+		   //FileOutputStream fstream = new FileOutputStream(file,false);
+		   //BufferedOutputStream out = new BufferedOutputStream(fstream);
+           //System.out.println("is found?"+ file.exists());
+			
+			if(listOfRecommendations.size() >= 1 && listOfRecommendations.get(0) != null && listOfRecommendations.get(0).getValue() != null)
+			{
 			String[] str = listOfRecommendations.get(0).getValue().split(" ");
 			StringBuilder st = new StringBuilder();
 			String[] temp;
@@ -101,8 +103,9 @@ public class RecommendationController {
 			//file.write(myJson);
 		     //out.write(myJson.getBytes());
 	           //Close the output stream
-	           out.close();
+	         //  out.close();
 			System.out.println(myJson);
+			}
 		}
 
 		catch (JsonProcessingException e) {
@@ -116,13 +119,11 @@ public class RecommendationController {
 		recommendation.addObject("recommendations", myJson);
 		System.out.println("reco list size = " + listOfRecommendations.size());
 
-		System.out.println(listOfRecommendations.get(0).getKey());
-
+		//System.out.println(listOfRecommendations.get(0).getKey());
+	
 		return recommendation;
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/recommend/myjson", method = RequestMethod.GET)
 	public @ResponseBody String getRecommendationJSON(Model model,
 			HttpServletRequest req) {
@@ -134,25 +135,25 @@ public class RecommendationController {
 		Nodelink links = new Nodelink();
 		String myJson = new String();
 		try {
-			
-		   //File file = new File(this.getClass().getClassLoader().getResource("recommendation.json").getFile());
-		  // FileOutputStream fstream = new FileOutputStream(file,false);
-		   //BufferedOutputStream out = new BufferedOutputStream(fstream);
-          // System.out.println("is found?"+ file.exists());
+
+			// File file = new
+			// File(this.getClass().getClassLoader().getResource("recommendation.json").getFile());
+			// FileOutputStream fstream = new FileOutputStream(file,false);
+			// BufferedOutputStream out = new BufferedOutputStream(fstream);
+			// System.out.println("is found?"+ file.exists());
 
 			String[] str = listOfRecommendations.get(0).getValue().split(" ");
 			StringBuilder st = new StringBuilder();
 			String[] temp;
 			int i = 1;
 			String name = "name";
-			
-            
+
 			Node n1 = new Node();
-		    n1.setName(listOfRecommendations.get(0).getKey());
-		    n1.setGroup(i);
-			
-		    links.nodes.add(n1);
-			
+			n1.setName(listOfRecommendations.get(0).getKey());
+			n1.setGroup(i);
+
+			links.nodes.add(n1);
+
 			for (String s : str) {
 				i++;
 				Node n = new Node();
@@ -161,7 +162,7 @@ public class RecommendationController {
 				n.setName(temp[0]);
 				n.setGroup(i);
 
-				l.setSource(i-1);
+				l.setSource(i - 1);
 				l.setTarget(0);
 
 				if (temp.length == 2) {
@@ -180,10 +181,10 @@ public class RecommendationController {
 			ObjectMapper mapper = new ObjectMapper();
 
 			myJson = mapper.writeValueAsString(links);
-			//file.write(myJson);
-		     //out.write(myJson.getBytes());
-	           //Close the output stream
-	          // out.close();
+			// file.write(myJson);
+			// out.write(myJson.getBytes());
+			// Close the output stream
+			// out.close();
 			System.out.println(myJson);
 		}
 
@@ -195,7 +196,7 @@ public class RecommendationController {
 			e.printStackTrace();
 		}
 
-		//recommendation.addObject("recommendations", myJson);
+		// recommendation.addObject("recommendations", myJson);
 		System.out.println("reco list size = " + listOfRecommendations.size());
 
 		System.out.println(listOfRecommendations.get(0).getKey());
