@@ -5,8 +5,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -130,6 +133,17 @@ public class BackController {
 			return new ModelAndView("error");
 		}
 		System.out.println("6");
+		Set<String> set = new HashSet<String>(); 
+		set = dynamoService.userRecommendations(upf.getLocation(), upf.getSkills().split(","));
+		Set<String> subSet = new HashSet<String>();
+		if(set != null && set.size() > 5) {
+			List<String> list =  new ArrayList<String>(set);
+			subSet = new LinkedHashSet<String>(list.subList(0, 5));
+			modelView.addObject("reco", subSet);
+		} else {
+			modelView.addObject("reco", set);
+		}
+		
 		modelView.addObject("user", usr);
 		modelView.addObject("companies", companies);
 		modelView.addObject("posts", statuses);
@@ -207,13 +221,16 @@ public class BackController {
 				ModelAndView mav =  new ModelAndView("signin");
 				mav.addObject("user", new User());
 				mav.addObject("msg", "Sign up before logging in");
+				
 				return mav;
 			}
 			if (!"".equals(password) && password.equals(usr.getPassword())) {
 				retView.addObject("user1", usr);
+				
 				req.getSession().setAttribute("user", email);
 				req.getSession().setAttribute("name", usr.getFirstName());
 				req.getSession().setAttribute("lastLogin", usr.getLastLogin());
+				
 				System.out.println("set session to"
 						+ req.getSession().getAttribute("user"));
 				retView.setViewName("redirect:/home/" + email);

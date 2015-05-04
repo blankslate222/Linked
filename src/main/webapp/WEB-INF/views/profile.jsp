@@ -137,6 +137,13 @@ Companies
 			${job}
 			<br>
 		</c:forEach>
+		<p><b>People similar to you based on your skills and location </b></p>
+		<c:forEach items="${reco}" var="recos"
+			varStatus="status">
+			
+			${recos}
+			<br>
+		</c:forEach>
 		</div>
 		</div>
 </body>

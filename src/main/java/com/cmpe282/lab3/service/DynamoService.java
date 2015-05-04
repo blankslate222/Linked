@@ -1,13 +1,21 @@
 package com.cmpe282.lab3.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import net.spy.memcached.MemcachedClient;
@@ -239,9 +247,10 @@ public class DynamoService {
 			try {
 				client = new MemcachedClient(new InetSocketAddress(configEndpoint,
 						clusterPort));
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return null;
 			}
 		}
 		return client;
@@ -252,15 +261,20 @@ public class DynamoService {
 		MemcachedClient client = null;
 		Object obj = null;
 		List<JobPosting> lists = new ArrayList<JobPosting>();
-		client = getClient();
-		if(client != null)
-			obj = getClient().get(id);
-		
-		if(obj != null) {
-			lists = (List<JobPosting>) obj;
-			System.out.println("from cache with size ="+lists.size());
-			return lists;
+		try {
+			client = getClient();
+			if(client != null)
+				obj = client.get(id);
+			
+			if(obj != null) {
+				lists = (List<JobPosting>) obj;
+				System.out.println("from cache with size ="+lists.size());
+				return lists;
+			}
+		} catch(Exception e) {
+			
 		}
+		
 
 		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
 		Condition scanFilterCondition = new Condition().withComparisonOperator(
@@ -392,6 +406,93 @@ public class DynamoService {
 		}
 		System.out.println("5");
 		return lists;
+	}
+	
+	public Set<String> userRecommendations(String location, String[] skills) {
+		File file1 = new File(this.getClass().getClassLoader().getResource("skills.txt").getFile());
+		File file2 = new File(this.getClass().getClassLoader().getResource("location.txt").getFile());
+		String[] usersFromSkills;
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(file1);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+			 
+			String line = null;
+			String strskills = "";
+			while ((line = br.readLine()) != null) {
+				
+				String[] values = line.split("\\t");
+				String skill = values[0];
+				for(String str: skills) {
+					if(skill.equalsIgnoreCase(str)) {
+						strskills = strskills + values[1];
+					}
+				}
+				
+				
+				
+			}
+			String[] arr = strskills.split(",");
+			Set<String> mySet = new HashSet<String>(Arrays.asList(arr));
+			String[] arr2 = strskills.split(",");
+			Set<String> setFirst = new HashSet<String>(Arrays.asList(arr2));
+			
+			br.close();
+			
+			FileInputStream fis1;
+			fis1 = new FileInputStream(file2);
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(fis1));
+			 
+			String line1 = null;
+			String strskills1 = "";
+			while ((line1 = br1.readLine()) != null) {
+				
+				String[] values = line1.split("\\t");
+				String location1 = values[0];
+				
+					if(location.equalsIgnoreCase(location1)) {
+						
+						strskills1 = strskills1 + values[1];
+					}
+				
+				
+				
+				
+			}
+			String[] arr1 = strskills1.split(",");
+			Set<String> mySet1 = new HashSet<String>(Arrays.asList(arr1));
+			System.out.println(mySet1);
+			br1.close();
+			
+			mySet.retainAll(mySet1);
+			
+			System.out.println(mySet);
+			if(mySet != null) {
+				System.out.println("myset is not null");
+				if(mySet.size() == 0) {
+					setFirst.addAll(mySet1);
+					return setFirst;
+				}
+			} 
+			return mySet;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		 
+		//Construct BufferedReader from InputStreamReader
+		
+		
+		
+	}
+	
+	public static void main(String[] args) {
+		String[] arr = {"Java"};
+		new DynamoService().userRecommendations("Bidar", arr);
 	}
 
 }
