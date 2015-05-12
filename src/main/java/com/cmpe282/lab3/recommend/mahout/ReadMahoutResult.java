@@ -16,7 +16,7 @@ public class ReadMahoutResult {
 		String line = null;
 		DynamoConnection dynamoConnection = null;
 		Recommendation recommendation = null;
-		mahoutResultFile = new File(this.getClass().getClassLoader().getResource("part-00000").getFile());
+		mahoutResultFile = new File(this.getClass().getClassLoader().getResource("career-path").getFile());
 		try {
 			fr = new FileReader(mahoutResultFile);
 			br = new BufferedReader(fr);
